@@ -1,0 +1,108 @@
+---
+import Logo from './Logo.astro';
+import { t } from '../i18n';
+import { type Lang, l } from '../lib/url';
+import { site, waLink } from '../config/site';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const d = t(lang);
+const h = d.hero;
+const year = new Date().getFullYear();
+const badgeText = h.badge.repeat(2);
+---
+<section class="end" aria-labelledby="end-title">
+  <div class="construct" aria-hidden="true">
+    <svg viewBox="0 0 1000 600" preserveAspectRatio="none">
+      <line data-draw x1="0" y1="0" x2="1000" y2="600" /><line data-draw x1="1000" y1="0" x2="0" y2="600" />
+      <line data-draw x1="500" y1="0" x2="500" y2="600" /><circle data-draw cx="500" cy="300" r="240" />
+    </svg>
+  </div>
+  <div class="wrap end__inner">
+    <h2 id="end-title" class="end__title">
+      <span class="end__line" data-split>{h.endA}</span>
+      <span class="end__line" data-split>{h.endB}</span>
+    </h2>
+    <a href={l(lang, '/book/')} class="end__badge" data-cursor={d.nav.book} data-magnetic="0.35" aria-label={d.common.bookCall}>
+      <svg viewBox="0 0 200 200" class="end__ring" aria-hidden="true">
+        <defs><path id="circ" d="M100 100m-78 0a78 78 0 1 1 156 0a78 78 0 1 1-156 0" /></defs>
+        <text><textPath href="#circ" textLength="488">{badgeText}</textPath></text>
+      </svg>
+      <span class="end__script script">{h.endScript}</span>
+    </a>
+  </div>
+</section>
+
+<footer class="ftr" data-dark>
+  <div class="wrap">
+    <div class="ftr__grid">
+      <div class="ftr__brand">
+        <Logo mono />
+        <p class="statement">{d.footer.tagline}</p>
+        <a class="btn btn--blue" href={l(lang, '/book/')} data-magnetic="0.25">
+          {d.common.bookCall}
+          <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+        </a>
+      </div>
+      <div>
+        <p class="caps ftr__h">{d.footer.explore}</p>
+        <ul>
+          <li><a class="ulink" href={l(lang, '/work/')}>{d.nav.work}</a></li>
+          <li><a class="ulink" href={l(lang, '/services/')}>{d.nav.services}</a></li>
+          <li><a class="ulink" href={l(lang, '/about/')}>{d.nav.about}</a></li>
+          <li><a class="ulink" href={l(lang, '/blog/')}>{d.nav.blog}</a></li>
+          <li><a class="ulink" href={l(lang, '/book/')}>{d.nav.book}</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="caps ftr__h">{d.footer.connect}</p>
+        <ul>
+          <li><a class="ulink" href={waLink()} target="_blank" rel="noopener">WhatsApp</a></li>
+          <li><a class="ulink" href={`mailto:${site.email}`}>{site.email}</a></li>
+          <li><a class="ulink" href={`tel:${site.phoneHref}`} dir="ltr">{site.phone}</a></li>
+          {Object.entries(site.social).filter(([, v]) => v).map(([k, v]) => (
+            <li><a class="ulink" href={v} target="_blank" rel="noopener">{k === 'x' ? 'X' : k[0].toUpperCase() + k.slice(1)}</a></li>
+          ))}
+        </ul>
+      </div>
+      <div>
+        <p class="caps ftr__h">{site.location[lang]}</p>
+        <p class="caps muted" data-clock>CAI --:--</p>
+      </div>
+    </div>
+  </div>
+  <div class="ftr__giant" aria-hidden="true" dir="ltr">
+    <div class="rail" style="--speed:40s" data-skew>
+      <span>sdiek marketing ✦</span><span>sdiek marketing ✦</span>
+    </div>
+  </div>
+  <div class="wrap ftr__base caps muted">
+    <span>© {year} {site.name}. {d.footer.rights}</span>
+    <span>{d.footer.built}</span>
+  </div>
+</footer>
+
+<style>
+  .end { position: relative; min-height: 100vh; display: grid; place-items: center; padding-block: 140px; overflow: hidden; }
+  .end__inner { position: relative; z-index: 1; display: grid; justify-items: center; text-align: center; gap: 40px; }
+  .end__title { font-size: clamp(3rem, 11vw, 10rem); line-height: 0.88; display: grid; }
+  .end__line:last-child { color: var(--blue); }
+  .end__badge { position: relative; width: clamp(170px, 20vw, 230px); aspect-ratio: 1; display: grid; place-items: center; border-radius: 50%; background: var(--ink); color: #fff; }
+  .end__ring { position: absolute; inset: 0; animation: spin 18s linear infinite; }
+  .end__ring text { font: 500 11.5px var(--f-display); letter-spacing: 0.1em; text-transform: uppercase; fill: #fff; }
+  :root[lang='ar'] .end__ring text { letter-spacing: 0; font-size: 13px; }
+  .end__badge:hover .end__ring { animation-duration: 5s; }
+  .end__script { color: #fff; font-size: clamp(1.4rem, 2.4vw, 2rem); max-width: 7ch; text-align: center; line-height: 1.05; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .ftr { background: var(--ink); color: #dfe5ef; padding-top: 90px; overflow: hidden; position: relative; z-index: 2; }
+  .ftr__grid { display: grid; gap: 40px; grid-template-columns: 1fr; padding-bottom: 60px; }
+  @media (min-width: 900px) { .ftr__grid { grid-template-columns: 1.6fr 1fr 1.2fr 1fr; } }
+  .ftr__brand { display: grid; gap: 22px; justify-items: start; color: #fff; }
+  .ftr__brand .statement { max-width: 16ch; }
+  .ftr__h { color: var(--blue-bright); margin-bottom: 14px; }
+  .ftr ul { list-style: none; padding: 0; display: grid; gap: 8px; }
+  .ftr__giant { font-family: var(--f-display); font-weight: 600; font-size: clamp(5rem, 19vw, 18rem); line-height: 1.05; padding-bottom: 0.04em; letter-spacing: -0.06em; color: #fff; text-transform: lowercase; opacity: 0.95; overflow: hidden; }
+  .ftr__giant .rail span:nth-child(2) { -webkit-text-stroke: 1.5px #fff; color: transparent; }
+  .ftr__base { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; padding-block: 24px 60px; color: #8592a8; }
+</style>

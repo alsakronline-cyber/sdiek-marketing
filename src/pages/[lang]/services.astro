@@ -1,0 +1,103 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import { t, pick } from '../../i18n';
+import { type Lang, l, langs } from '../../lib/url';
+import { services } from '../../data/services';
+import { getProject } from '../../data/projects';
+
+export const getStaticPaths = () => langs.map((lang) => ({ params: { lang } }));
+const lang = Astro.params.lang as Lang;
+const d = t(lang);
+const s = d.services;
+const jsonld = [
+  {
+    '@type': 'OfferCatalog',
+    name: s.metaTitle,
+    itemListElement: services.map((x) => ({
+      '@type': 'Offer',
+      itemOffered: { '@type': 'Service', name: pick(x.title, lang), description: pick(x.short, lang), provider: { '@type': 'Organization', name: 'Sdiek Marketing' } },
+    })),
+  },
+  {
+    '@type': 'FAQPage',
+    mainEntity: s.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+  },
+];
+---
+<Base lang={lang} title={s.metaTitle} description={s.metaDesc} jsonld={jsonld}>
+  <PageHero eyebrow={`${services.length} ${lang === 'ar' ? 'قدرات' : 'capabilities'}`} title={s.title} script={lang === 'ar' ? 'نظام واحد' : 'one system'} lead={s.lead}>
+    <div class="btn-row" data-reveal style="--d:.55s"><a class="btn btn--blue" href={l(lang, '/book/')} data-magnetic="0.25">{d.common.bookCall}</a></div>
+  </PageHero>
+
+  <section class="wrap sv">
+    {services.map((x) => (
+      <article class="sv__item" id={x.id}>
+        <div class="sv__left">
+          <span class="sv__n" dir="ltr">{x.n}</span>
+          <svg class="sv__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={x.icon} />
+        </div>
+        <div class="sv__main">
+          <h2 class="sv__title" data-split>{pick(x.title, lang)}</h2>
+          <p class="statement" data-reveal>{pick(x.short, lang)}</p>
+          <div class="sv__cols">
+            <div data-reveal>
+              <p class="caps blue">{s.deliverables}</p>
+              <ul class="sv__list">{pick(x.deliverables, lang).map((it) => <li>{it}</li>)}</ul>
+            </div>
+            <div data-reveal style="--d:.1s">
+              <p class="caps blue">{d.nav.work}</p>
+              <ul class="sv__proj">
+                {x.projects.map((slug) => { const p = getProject(slug); return p && (
+                  <li><a class="ulink" href={l(lang, `/work/${slug}/`)}>{p.title} ↗</a></li>
+                ); })}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </article>
+    ))}
+  </section>
+
+  <section class="section faq">
+    <div class="wrap faq__grid">
+      <h2 class="h2" data-split>{s.faqTitle}</h2>
+      <div class="faq__list">
+        {s.faq.map((f) => (
+          <details class="faq__item">
+            <summary><span>{f.q}</span><i aria-hidden="true"></i></summary>
+            <p class="muted">{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .sv { display: grid; }
+  .sv__item { display: grid; gap: 24px; padding-block: clamp(60px, 8vw, 110px); border-top: 1px solid var(--ink); scroll-margin-top: 80px; }
+  @media (min-width: 900px) { .sv__item { grid-template-columns: 0.6fr 2fr; } }
+  .sv__left { display: flex; align-items: start; justify-content: space-between; gap: 20px; }
+  @media (min-width: 900px) { .sv__left { position: sticky; top: 120px; align-self: start; flex-direction: column; } }
+  .sv__n { font-family: var(--f-display); font-size: clamp(4rem, 9vw, 8rem); line-height: 0.85; letter-spacing: -0.06em; color: var(--blue); }
+  .sv__icon { width: 54px; height: 54px; color: var(--ink); }
+  .sv__main { display: grid; gap: 26px; }
+  .sv__title { font-size: clamp(2.2rem, 6vw, 5.4rem); }
+  .sv__cols { display: grid; gap: 30px; }
+  @media (min-width: 700px) { .sv__cols { grid-template-columns: 1.3fr 1fr; } }
+  .sv__list, .sv__proj { list-style: none; padding: 0; margin-top: 12px; border-top: 1px solid var(--line); }
+  .sv__list li, .sv__proj li { padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .faq { background: var(--surface); }
+  .faq__grid { display: grid; gap: 40px; }
+  @media (min-width: 900px) { .faq__grid { grid-template-columns: 1fr 1.4fr; } }
+  .faq__list { border-top: 1px solid var(--ink); }
+  .faq__item { border-bottom: 1px solid var(--line); }
+  .faq__item summary { list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 24px 0; font-family: var(--f-display); font-size: clamp(1.15rem, 2vw, 1.5rem); font-weight: 500; cursor: pointer; }
+  .faq__item summary::-webkit-details-marker { display: none; }
+  .faq__item i { position: relative; width: 18px; height: 18px; flex: none; }
+  .faq__item i::before, .faq__item i::after { content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 1.5px; background: var(--blue); transition: transform 0.4s var(--ease); }
+  .faq__item i::after { transform: rotate(90deg); }
+  .faq__item[open] i::after { transform: rotate(0); }
+  .faq__item p { padding-bottom: 24px; max-width: 62ch; }
+</style>

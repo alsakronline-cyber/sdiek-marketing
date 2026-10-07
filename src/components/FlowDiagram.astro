@@ -1,0 +1,36 @@
+---
+// Animated "workflow" diagram: nodes connected by a rail with a travelling signal.
+interface Props { steps: string[]; compact?: boolean; title?: string }
+const { steps, compact = false, title } = Astro.props;
+---
+<figure class:list={['flow', { 'flow--compact': compact }]} style={`--n:${steps.length}`}>
+  {title && <figcaption class="caps muted">{title}</figcaption>}
+  <ol class="flow__list">
+    {steps.map((s, i) => (
+      <li class="flow__node" style={`--i:${i}`}>
+        <span class="flow__idx mono">{String(i + 1).padStart(2, '0')}</span>
+        <span class="flow__label">{s}</span>
+      </li>
+    ))}
+  </ol>
+</figure>
+
+<style>
+  .flow { position: relative; }
+  .flow figcaption { margin-bottom: 18px; }
+  .flow__list { list-style: none; padding: 0; display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); counter-reset: n; position: relative; }
+  .flow__node { position: relative; padding: 18px 16px 16px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); display: grid; gap: 10px; min-height: 104px; align-content: space-between; overflow: hidden; isolation: isolate; }
+  .flow__node::before { content: ''; position: absolute; inset: 0; z-index: -1; background: var(--blue); transform: scaleY(0); transform-origin: bottom; animation: fill calc(var(--n) * 0.7s) var(--ease-in-out) infinite; animation-delay: calc(var(--i) * 0.7s); }
+  .flow__node::after { content: ''; position: absolute; top: 50%; inset-inline-end: -15px; width: 16px; height: 1px; background: var(--blue); }
+  .flow__node:last-child::after { display: none; }
+  .flow__idx { color: var(--blue); animation: idx calc(var(--n) * 0.7s) var(--ease-in-out) infinite; animation-delay: calc(var(--i) * 0.7s); }
+  .flow__label { font-family: var(--f-display); font-weight: 500; font-size: 1.02rem; line-height: 1.2; animation: lbl calc(var(--n) * 0.7s) var(--ease-in-out) infinite; animation-delay: calc(var(--i) * 0.7s); }
+  @keyframes fill { 0% { transform: scaleY(0); } 8%, 14% { transform: scaleY(1); } 24%, 100% { transform: scaleY(0); transform-origin: top; } }
+  @keyframes idx { 0%, 24%, 100% { color: var(--blue); } 8%, 14% { color: #fff; } }
+  @keyframes lbl { 0%, 24%, 100% { color: var(--ink); } 8%, 14% { color: #fff; } }
+  .flow--compact .flow__node { min-height: 0; padding: 12px; }
+  .flow--compact .flow__label { font-size: 0.9rem; }
+  :global(.ink-block) .flow__node, :global(.blue-block) .flow__node { background: rgb(255 255 255 / 0.04); border-color: rgb(255 255 255 / 0.14); }
+  :global(.ink-block) .flow__label { animation-name: none; color: #fff; }
+  :global(.ink-block) figcaption { color: #93a0b8; }
+</style>

@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import { t } from '../i18n';
+import { l } from '../lib/url';
+const d = t('en');
+---
+<Base lang="en" title="404 — Sdiek Marketing" description={d.notFound.body} noindex alternate={false}>
+  <section class="nf wrap">
+    <p class="nf__code script">404</p>
+    <h1 class="h2">{d.notFound.title}</h1>
+    <p class="lead">{d.notFound.body}</p>
+    <div class="btn-row"><a class="btn btn--blue" href={l('en', '/')}>{d.notFound.home}</a><a class="btn btn--ghost" href={l('ar', '/')}>العربية</a></div>
+  </section>
+</Base>
+<style>
+  .nf { min-height: 100vh; display: grid; align-content: center; gap: 22px; padding-top: 120px; }
+  .nf__code { font-size: clamp(8rem, 25vw, 20rem); }
+</style>

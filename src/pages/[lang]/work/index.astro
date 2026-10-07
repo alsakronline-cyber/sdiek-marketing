@@ -1,0 +1,84 @@
+---
+import Base from '../../../layouts/Base.astro';
+import PageHero from '../../../components/PageHero.astro';
+import FlowDiagram from '../../../components/FlowDiagram.astro';
+import { t, pick } from '../../../i18n';
+import { type Lang, l, u, langs } from '../../../lib/url';
+import { projects, categories } from '../../../data/projects';
+
+export const getStaticPaths = () => langs.map((lang) => ({ params: { lang } }));
+const lang = Astro.params.lang as Lang;
+const d = t(lang);
+const w = d.work;
+const jsonld = [{
+  '@type': 'CollectionPage',
+  name: w.metaTitle,
+  inLanguage: lang,
+  hasPart: projects.map((p) => ({ '@type': 'CreativeWork', name: p.title, url: new URL(l(lang, `/work/${p.slug}/`), Astro.site).href })),
+}];
+---
+<Base lang={lang} title={w.metaTitle} description={w.metaDesc} jsonld={jsonld}>
+  <PageHero eyebrow={`${projects.length} ${lang === 'ar' ? 'مشروعًا' : 'projects'}`} title={w.title} script={lang === 'ar' ? 'مبنية من الصفر' : 'built from scratch'} lead={w.lead} />
+
+  <section class="wrap wk">
+    <div class="wk__filters" role="tablist" aria-label="Filter">
+      <button class="chip is-on" data-filter="all" role="tab" aria-selected="true">{w.filters.all} <span class="mono">{projects.length}</span></button>
+      {categories.map((c) => (
+        <button class="chip" data-filter={c} role="tab" aria-selected="false">{w.filters[c]} <span class="mono">{projects.filter((p) => p.category === c).length}</span></button>
+      ))}
+    </div>
+
+    <div class="wk__grid">
+      {projects.map((p, i) => (
+        <a href={l(lang, `/work/${p.slug}/`)} class:list={['card-p', { 'card-p--wide': p.featured && p.image }]} data-cat={p.category} data-cursor={d.common.view} data-reveal style={`--d:${(i % 3) * 0.06}s`}>
+          <div class="card-p__media" data-tilt>
+            {p.image ? (
+              <img src={u(`/work/${p.image}`)} alt={`${p.title} — ${pick(p.tagline, lang)}`} width="1280" height="800" loading={i < 4 ? 'eager' : 'lazy'} decoding="async" />
+            ) : (
+              <div class="card-p__flow ink-block"><FlowDiagram steps={pick(p.flow, lang).slice(0, 4)} compact /></div>
+            )}
+            <span class="card-p__status caps">{p.status.en === 'Live' && <span class="dot-live"></span>}{pick(p.status, lang)}</span>
+          </div>
+          <div class="card-p__meta">
+            <span class="mono blue">{String(i + 1).padStart(2, '0')} · {w.filters[p.category]}</span>
+            <h2 class="card-p__title">{p.title}</h2>
+            <p class="muted">{pick(p.tagline, lang)}</p>
+            <ul class="card-p__stack">{p.stack.slice(0, 4).map((s) => <li class="chip">{s}</li>)}</ul>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+</Base>
+
+<script>
+  const btns = document.querySelectorAll<HTMLButtonElement>('[data-filter]');
+  const cards = document.querySelectorAll<HTMLElement>('.card-p');
+  btns.forEach((b) => b.addEventListener('click', () => {
+    btns.forEach((x) => { x.classList.toggle('is-on', x === b); x.setAttribute('aria-selected', String(x === b)); });
+    const f = b.dataset.filter;
+    cards.forEach((c) => { c.hidden = !(f === 'all' || c.dataset.cat === f); });
+  }));
+</script>
+
+<style>
+  .wk { padding-bottom: 120px; }
+  .wk__filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 40px; position: sticky; top: 90px; z-index: 5; }
+  .wk__filters .chip { background: var(--surface); transition: background 0.3s, color 0.3s, border-color 0.3s; }
+  .wk__filters .chip.is-on { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .wk__grid { display: grid; gap: 60px 28px; grid-template-columns: 1fr; }
+  @media (min-width: 760px) { .wk__grid { grid-template-columns: 1fr 1fr; } .card-p--wide { grid-column: span 2; } }
+  @media (min-width: 1200px) { .wk__grid { grid-template-columns: repeat(3, 1fr); } .card-p--wide { grid-column: span 2; } }
+  .card-p { display: grid; gap: 18px; align-content: start; }
+  .card-p[hidden] { display: none; }
+  .card-p__media { position: relative; aspect-ratio: 16 / 10; overflow: hidden; border-radius: 6px; background: var(--surface-2); transition: transform 0.5s var(--ease); }
+  .card-p__media img { width: 100%; height: 100%; object-fit: cover; object-position: top; transition: transform 1.2s var(--ease); }
+  .card-p:hover .card-p__media img { transform: scale(1.05); }
+  .card-p__flow { position: absolute; inset: 0; display: grid; align-content: center; padding: 22px; }
+  .card-p__status { position: absolute; top: 12px; inset-inline-start: 12px; display: inline-flex; align-items: center; gap: 8px; background: rgb(245 246 249 / 0.92); padding: 6px 10px; border-radius: 999px; }
+  .card-p__meta { display: grid; gap: 8px; }
+  .card-p__title { font-size: clamp(1.6rem, 3vw, 2.6rem); transition: color 0.3s; }
+  .card-p:hover .card-p__title { color: var(--blue); }
+  .card-p__stack { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+  .card-p__stack .chip { font-size: 0.68rem; padding: 4px 9px; }
+</style>

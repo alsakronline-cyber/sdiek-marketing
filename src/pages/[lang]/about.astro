@@ -1,0 +1,76 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Logo from '../../components/Logo.astro';
+import { t } from '../../i18n';
+import { type Lang, l, langs } from '../../lib/url';
+import { projects } from '../../data/projects';
+
+export const getStaticPaths = () => langs.map((lang) => ({ params: { lang } }));
+const lang = Astro.params.lang as Lang;
+const d = t(lang);
+const a = d.about;
+const tools = [...new Set(projects.flatMap((p) => p.stack))].slice(0, 40);
+const jsonld = [{ '@type': 'AboutPage', name: a.metaTitle, inLanguage: lang, mainEntity: { '@type': 'Person', name: 'Mohamed Ramadan' } }];
+---
+<Base lang={lang} title={a.metaTitle} description={a.metaDesc} jsonld={jsonld}>
+  <PageHero eyebrow={a.title} title={a.hello} script={d.hero.roles[0]} />
+
+  <section class="ab wrap">
+    <div class="ab__portrait torn blue-block" data-reveal>
+      <!-- TODO: replace with a real portrait (docs/MISSING.md). The mark tracks the mouse meanwhile. -->
+      <div class="ab__mark" data-track="18"><Logo size={300} wordmark={false} mono /></div>
+      <span class="caps ab__cap">Mohamed Ramadan · Sdiek Marketing</span>
+    </div>
+    <div class="ab__text">
+      <p class="statement" data-reveal>{a.lead}</p>
+      {a.body.map((p, i) => <p class="ab__p" data-reveal style={`--d:${0.1 * (i + 1)}s`}>{p}</p>)}
+      <div class="btn-row" data-reveal>
+        <a class="btn btn--blue" href={l(lang, '/book/')} data-magnetic="0.25">{d.common.bookCall}</a>
+        <a class="btn btn--ghost" href={l(lang, '/work/')} data-magnetic="0.25">{d.home.ctaSecondary}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section ink-block pr" data-dark>
+    <div class="wrap">
+      <h2 class="pr__title"><span class="script">{a.principlesTitle}</span></h2>
+      <ol class="pr__list">
+        {a.principles.map((p, i) => (
+          <li data-reveal style={`--d:${i * 0.08}s`}>
+            <span class="mono" style="color:var(--blue-bright)">0{i + 1}</span>
+            <h3 class="h3">{p.t}</h3>
+            <p style="color:#aab6ca">{p.d}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <h2 class="caps">{a.toolboxTitle}</h2>
+      <ul class="tb">{tools.map((tl, i) => <li class="tb__item" data-reveal style={`--d:${(i % 10) * 0.03}s`}>{tl}</li>)}</ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .ab { display: grid; gap: 50px; padding-bottom: 120px; }
+  @media (min-width: 900px) { .ab { grid-template-columns: 1fr 1.1fr; align-items: start; } }
+  .ab__portrait { position: relative; aspect-ratio: 4 / 5; display: grid; place-items: center; overflow: hidden; perspective: 900px; }
+  @media (min-width: 900px) { .ab__portrait { position: sticky; top: 100px; } }
+  .ab__mark { width: 60%; color: #fff; will-change: transform; }
+  .ab__mark :global(svg) { width: 100%; height: auto; }
+  .ab__cap { position: absolute; bottom: 30px; inset-inline-start: 24px; }
+  .ab__text { display: grid; gap: 24px; }
+  .ab__text .statement { font-size: clamp(1.4rem, 2.6vw, 2.3rem); }
+  .ab__p { font-size: 1.1rem; line-height: 1.75; max-width: 58ch; }
+  .pr__title { text-align: center; margin-bottom: 60px; }
+  .pr__title .script { font-size: clamp(3.5rem, 9vw, 7rem); color: #fff; }
+  .pr__list { list-style: none; padding: 0; display: grid; gap: 30px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+  .pr__list li { display: grid; gap: 10px; border-top: 1px solid rgb(255 255 255 / 0.15); padding-top: 24px; }
+  .tb { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+  .tb__item { font-family: var(--f-display); font-size: clamp(1.1rem, 2.2vw, 1.8rem); text-transform: uppercase; letter-spacing: -0.02em; padding: 8px 18px; border: 1px solid var(--line); border-radius: 999px; transition: background 0.3s, color 0.3s; }
+  .tb__item:hover { background: var(--blue); color: #fff; border-color: var(--blue); }
+</style>

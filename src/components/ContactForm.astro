@@ -1,0 +1,86 @@
+---
+import { t, pick } from '../i18n';
+import type { Lang } from '../lib/url';
+import { services } from '../data/services';
+import { site } from '../config/site';
+
+interface Props { lang: Lang; mode?: 'contact' | 'book' }
+const { lang, mode = 'contact' } = Astro.props;
+const d = t(lang);
+const c = d.contact;
+---
+<form class="cform form-grid" data-form data-endpoint={site.formEndpoint} data-email={site.email} data-mode={mode} novalidate>
+  <div class="field"><label for={`n-${mode}`}>{c.name}</label><input class="input" id={`n-${mode}`} name="name" required autocomplete="name" /></div>
+  <div class="field"><label for={`e-${mode}`}>{c.email}</label><input class="input" id={`e-${mode}`} name="email" type="email" required autocomplete="email" /></div>
+  <div class="field"><label for={`p-${mode}`}>{c.phone}</label><input class="input" id={`p-${mode}`} name="phone" type="tel" autocomplete="tel" dir="ltr" /></div>
+  <div class="field"><label for={`co-${mode}`}>{c.company}</label><input class="input" id={`co-${mode}`} name="company" autocomplete="organization" /></div>
+
+  {mode === 'book' ? (
+    <>
+      <div class="field"><label for="date-book">{d.book.date}</label><input class="input" id="date-book" name="date" type="date" required /></div>
+      <div class="field"><label for="time-book">{d.book.time}</label><input class="input" id="time-book" name="time" type="time" min="10:00" max="20:00" step="1800" required /></div>
+    </>
+  ) : (
+    <>
+      <div class="field"><label for="svc">{c.service}</label>
+        <select class="input" id="svc" name="service">
+          {services.map((s) => <option>{pick(s.title, lang)}</option>)}
+        </select>
+      </div>
+      <div class="field"><label for="budget">{c.budget}</label>
+        <select class="input" id="budget" name="budget">{c.budgets.map((b) => <option>{b}</option>)}</select>
+      </div>
+    </>
+  )}
+
+  <div class="field full"><label for={`m-${mode}`}>{c.message}</label><textarea class="input" id={`m-${mode}`} name="message" required={mode === 'contact'}></textarea></div>
+  <input type="text" name="website" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true" />
+  <div class="full cform__foot">
+    <button class="btn btn--blue" type="submit" data-magnetic="0.2">
+      <span data-label>{mode === 'book' ? d.book.request : c.send}</span>
+      <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+    </button>
+    <p class="caps muted">{c.privacy}</p>
+  </div>
+  <p class="form-status full" role="status" aria-live="polite" data-status
+     data-sending={c.sending} data-sent={c.sent} data-error={c.error}></p>
+</form>
+
+<style>
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+  .cform__foot { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; justify-content: space-between; }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>('[data-form]').forEach((form) => {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const status = form.querySelector<HTMLElement>('[data-status]')!;
+      if (!form.checkValidity()) { form.reportValidity(); return; }
+      const data = Object.fromEntries(new FormData(form).entries()) as Record<string, string>;
+      if (data.website) return; // honeypot
+      delete data.website;
+      const payload = { ...data, type: form.dataset.mode, lang: document.documentElement.lang, page: location.href, sentAt: new Date().toISOString() };
+      const endpoint = form.dataset.endpoint;
+      status.className = 'form-status full';
+      status.textContent = status.dataset.sending!;
+      if (!endpoint) {
+        // No backend configured yet: hand off to the visitor's email client.
+        const body = Object.entries(payload).map(([k, v]) => `${k}: ${v}`).join('\n');
+        location.href = `mailto:${form.dataset.email}?subject=${encodeURIComponent(`[Sdiek] ${payload.type} — ${payload.name}`)}&body=${encodeURIComponent(body)}`;
+        status.textContent = '';
+        return;
+      }
+      try {
+        const res = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        if (!res.ok) throw new Error(String(res.status));
+        status.classList.add('ok');
+        status.textContent = status.dataset.sent!;
+        form.reset();
+      } catch {
+        status.classList.add('err');
+        status.textContent = status.dataset.error!;
+      }
+    });
+  });
+</script>

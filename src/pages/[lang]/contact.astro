@@ -1,0 +1,51 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import ContactForm from '../../components/ContactForm.astro';
+import { t } from '../../i18n';
+import { type Lang, l, langs } from '../../lib/url';
+import { site, waLink } from '../../config/site';
+
+export const getStaticPaths = () => langs.map((lang) => ({ params: { lang } }));
+const lang = Astro.params.lang as Lang;
+const d = t(lang);
+const c = d.contact;
+const channels = [
+  { label: 'WhatsApp', value: site.phone, href: waLink(lang === 'ar' ? 'مرحبًا محمد، أريد التحدث عن مشروع' : 'Hi Mohamed, I’d like to talk about a project'), ext: true },
+  { label: 'Email', value: site.email, href: `mailto:${site.email}` },
+  { label: lang === 'ar' ? 'هاتف' : 'Phone', value: site.phone, href: `tel:${site.phoneHref}` },
+  { label: lang === 'ar' ? 'مكالمة ٣٠ دقيقة' : '30-min call', value: d.nav.book, href: l(lang, '/book/') },
+];
+const jsonld = [{ '@type': 'ContactPage', name: c.metaTitle, inLanguage: lang }];
+---
+<Base lang={lang} title={c.metaTitle} description={c.metaDesc} jsonld={jsonld}>
+  <PageHero eyebrow={d.chrome.getInTouch} title={c.title} lead={c.lead} />
+
+  <section class="wrap ct">
+    <div class="ct__form" data-reveal><ContactForm lang={lang} /></div>
+    <aside class="ct__side">
+      <p class="caps blue">{c.channels}</p>
+      <ul class="ct__ch">
+        {channels.map((ch) => (
+          <li>
+            <a href={ch.href} target={ch.ext ? '_blank' : undefined} rel={ch.ext ? 'noopener' : undefined} class="ct__row" data-cursor="Go">
+              <span class="caps muted">{ch.label}</span>
+              <span class="ct__val" dir={ch.label === 'Email' ? 'ltr' : undefined}>{ch.value}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <p class="caps muted">{site.location[lang]}</p>
+    </aside>
+  </section>
+</Base>
+
+<style>
+  .ct { display: grid; gap: 60px; padding-bottom: 120px; }
+  @media (min-width: 1000px) { .ct { grid-template-columns: 1.5fr 1fr; } }
+  .ct__side { display: grid; gap: 18px; align-content: start; }
+  .ct__ch { list-style: none; padding: 0; border-top: 1px solid var(--ink); }
+  .ct__row { display: grid; gap: 4px; padding: 20px 0; border-bottom: 1px solid var(--line); transition: padding 0.5s var(--ease), color 0.3s; }
+  .ct__row:hover { padding-inline-start: 14px; color: var(--blue); }
+  .ct__val { font-family: var(--f-display); font-size: clamp(1.2rem, 2.2vw, 1.7rem); letter-spacing: -0.02em; overflow-wrap: anywhere; }
+</style>

@@ -1,0 +1,150 @@
+---
+import Base from '../../../layouts/Base.astro';
+import FlowDiagram from '../../../components/FlowDiagram.astro';
+import { t, pick } from '../../../i18n';
+import { type Lang, l, u, langs } from '../../../lib/url';
+import { projects } from '../../../data/projects';
+import { approvedTestimonials } from '../../../data/testimonials';
+
+export const getStaticPaths = () =>
+  langs.flatMap((lang) => projects.map((p) => ({ params: { lang, slug: p.slug } })));
+
+const lang = Astro.params.lang as Lang;
+const d = t(lang);
+const w = d.work;
+const idx = projects.findIndex((p) => p.slug === Astro.params.slug);
+const p = projects[idx];
+const next = projects[(idx + 1) % projects.length];
+const quote = approvedTestimonials.find((q) => q.project === p.slug);
+const title = `${p.title} — ${pick(p.tagline, lang)} | Sdiek Marketing`;
+const pageUrl = new URL(l(lang, `/work/${p.slug}/`), Astro.site).href;
+const jsonld = [
+  {
+    '@type': 'CreativeWork',
+    name: p.title,
+    headline: pick(p.tagline, lang),
+    description: pick(p.summary, lang),
+    url: pageUrl,
+    inLanguage: lang,
+    creator: { '@type': 'Person', name: 'Mohamed Ramadan' },
+    keywords: p.stack.join(', '),
+    ...(p.image ? { image: new URL(u(`/work/${p.image}`), Astro.site).href } : {}),
+    ...(p.url ? { sameAs: p.url } : {}),
+  },
+  {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: d.nav.home, item: new URL(l(lang, '/'), Astro.site).href },
+      { '@type': 'ListItem', position: 2, name: d.nav.work, item: new URL(l(lang, '/work/'), Astro.site).href },
+      { '@type': 'ListItem', position: 3, name: p.title, item: pageUrl },
+    ],
+  },
+];
+const arrow = '<svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+---
+<Base lang={lang} title={title} description={pick(p.summary, lang)} image={p.image ? `/work/${p.image}` : '/og.png'} type="article" jsonld={jsonld}>
+  <article>
+    <header class="cs-hero">
+      <div class="construct" aria-hidden="true">
+        <svg viewBox="0 0 1000 600" preserveAspectRatio="none"><line data-draw x1="0" y1="600" x2="1000" y2="0" /><line data-draw x1="700" y1="0" x2="700" y2="600" /></svg>
+      </div>
+      <div class="wrap cs-hero__inner">
+        <a href={l(lang, '/work/')} class="caps ulink">← {d.common.allWork}</a>
+        <p class="mono blue" data-reveal>{w.filters[p.category]} · {p.year}</p>
+        <h1 class="cs-title" data-split>{p.title}</h1>
+        <p class="statement cs-tag" data-reveal style="--d:.3s">{pick(p.tagline, lang)}</p>
+        <dl class="cs-meta" data-reveal style="--d:.45s">
+          <div><dt class="caps muted">{d.common.client}</dt><dd>{pick(p.client, lang)}</dd></div>
+          <div><dt class="caps muted">{d.common.role}</dt><dd>{pick(p.role, lang)}</dd></div>
+          <div><dt class="caps muted">{d.common.status}</dt><dd>{pick(p.status, lang)}</dd></div>
+          <div><dt class="caps muted">{d.common.year}</dt><dd>{p.year}</dd></div>
+        </dl>
+        {p.url && (
+          <div class="btn-row" data-reveal style="--d:.55s">
+            <a class="btn btn--blue" href={p.url} target="_blank" rel="noopener" data-magnetic="0.25">{d.common.visitSite}<Fragment set:html={arrow} /></a>
+          </div>
+        )}
+      </div>
+    </header>
+
+    <div class="wrap">
+      {p.image ? (
+        <figure class="cs-shot" data-reveal>
+          <div class="cs-shot__bar" aria-hidden="true"><i></i><i></i><i></i><span class="mono">{p.url?.replace(/^https?:\/\//, '')}</span></div>
+          <img src={u(`/work/${p.image}`)} alt={`${p.title} — ${pick(p.tagline, lang)}`} width="1280" height="800" decoding="async" />
+        </figure>
+      ) : (
+        <div class="cs-flowhero ink-block" data-reveal>
+          <FlowDiagram steps={pick(p.flow, lang)} title={w.howItWorks} />
+        </div>
+      )}
+    </div>
+
+    <section class="wrap cs-body">
+      <div class="cs-block" data-reveal>
+        <h2 class="caps blue">{w.challenge}</h2>
+        <p class="statement">{pick(p.challenge, lang)}</p>
+      </div>
+      <div class="cs-block" data-reveal>
+        <h2 class="caps blue">{w.solution}</h2>
+        <p class="cs-p">{pick(p.solution, lang)}</p>
+      </div>
+      {p.image && (
+        <div class="cs-block cs-block--full" data-reveal>
+          <FlowDiagram steps={pick(p.flow, lang)} title={w.howItWorks} />
+        </div>
+      )}
+      <div class="cs-block" data-reveal>
+        <h2 class="caps blue">{w.features}</h2>
+        <ul class="cs-feats">{pick(p.features, lang).map((f, i) => <li><span class="mono blue">{String(i + 1).padStart(2, '0')}</span>{f}</li>)}</ul>
+      </div>
+      <div class="cs-block" data-reveal>
+        <h2 class="caps blue">{d.common.stack}</h2>
+        <ul class="cs-stack">{p.stack.map((s) => <li class="chip">{s}</li>)}</ul>
+      </div>
+      <div class="cs-block cs-block--full cs-outcome blue-block torn" data-reveal>
+        <h2 class="caps">{w.outcome}</h2>
+        <p class="statement">{pick(p.outcome, lang)}</p>
+      </div>
+      {quote && (
+        <figure class="cs-block cs-block--full" data-reveal>
+          <blockquote class="statement">“{pick(quote.quote, lang)}”</blockquote>
+          <figcaption class="caps muted">{pick(quote.name, lang)} — {pick(quote.role, lang)}</figcaption>
+        </figure>
+      )}
+    </section>
+
+    <a href={l(lang, `/work/${next.slug}/`)} class="cs-next" data-cursor={d.common.next}>
+      <span class="caps muted">{d.common.next}</span>
+      <span class="cs-next__title">{next.title}</span>
+      <span class="muted">{pick(next.tagline, lang)}</span>
+    </a>
+  </article>
+</Base>
+
+<style>
+  .cs-hero { position: relative; padding-top: clamp(140px, 18vw, 210px); padding-bottom: 60px; overflow: hidden; }
+  .cs-hero__inner { position: relative; z-index: 1; display: grid; gap: 20px; justify-items: start; }
+  .cs-title { font-size: clamp(3rem, 11vw, 10rem); line-height: 0.86; letter-spacing: -0.06em; }
+  :root[lang='ar'] .cs-title { letter-spacing: -0.03em; }
+  .cs-tag { max-width: 34ch; }
+  .cs-meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 20px 40px; width: 100%; border-top: 1px solid var(--line); padding-top: 22px; margin-top: 10px; }
+  .cs-meta dd { margin: 4px 0 0; font-weight: 500; }
+  .cs-shot { border-radius: 10px; overflow: hidden; border: 1px solid var(--line); box-shadow: 0 50px 90px -40px rgb(11 20 36 / 0.45); background: #fff; }
+  .cs-shot__bar { display: flex; align-items: center; gap: 6px; padding: 10px 14px; background: var(--surface-2); }
+  .cs-shot__bar i { width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
+  .cs-shot__bar span { margin-inline-start: 12px; color: var(--muted); text-transform: none; }
+  .cs-flowhero { border-radius: 10px; padding: clamp(28px, 5vw, 60px); }
+  .cs-body { display: grid; gap: clamp(50px, 7vw, 90px) 60px; padding-block: clamp(80px, 10vw, 140px); }
+  @media (min-width: 900px) { .cs-body { grid-template-columns: 1fr 1fr; } .cs-block--full { grid-column: 1 / -1; } }
+  .cs-block { display: grid; gap: 16px; align-content: start; }
+  .cs-p { font-size: 1.08rem; line-height: 1.75; }
+  .cs-feats { list-style: none; padding: 0; border-top: 1px solid var(--line); }
+  .cs-feats li { display: flex; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line); font-weight: 500; }
+  .cs-stack { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  .cs-outcome { padding: clamp(50px, 7vw, 90px) clamp(24px, 5vw, 70px); }
+  .cs-outcome .statement { font-size: clamp(1.4rem, 3vw, 2.6rem); max-width: 30ch; }
+  .cs-next { display: grid; gap: 10px; justify-items: center; text-align: center; padding: clamp(90px, 12vw, 160px) var(--gutter); border-top: 1px solid var(--line); }
+  .cs-next__title { font-family: var(--f-display); font-size: clamp(3rem, 10vw, 9rem); text-transform: uppercase; letter-spacing: -0.06em; line-height: 0.9; transition: color 0.4s; }
+  .cs-next:hover .cs-next__title { color: var(--blue); }
+</style>

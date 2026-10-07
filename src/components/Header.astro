@@ -1,0 +1,115 @@
+---
+import Logo from './Logo.astro';
+import { t } from '../i18n';
+import { type Lang, l, swapLang, otherLang } from '../lib/url';
+import { site, waLink } from '../config/site';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const d = t(lang);
+const path = Astro.url.pathname;
+const pages = [
+  { href: l(lang, '/'), label: d.nav.home },
+  { href: l(lang, '/about/'), label: d.nav.about },
+  { href: l(lang, '/services/'), label: d.nav.services },
+  { href: l(lang, '/work/'), label: d.nav.work },
+  { href: l(lang, '/blog/'), label: d.nav.blog },
+  { href: l(lang, '/contact/'), label: d.nav.contact },
+];
+const socials = [
+  { href: waLink(), label: 'WhatsApp' },
+  { href: `mailto:${site.email}`, label: 'Email' },
+  ...Object.entries(site.social).filter(([, v]) => v).map(([k, v]) => ({ href: v, label: k === 'x' ? 'X' : k[0].toUpperCase() + k.slice(1) })),
+];
+const isActive = (href: string) => (href.endsWith(`/${lang}/`) ? path === href : path.startsWith(href));
+---
+<header class="hdr">
+  <a href={l(lang, '/')} class="hdr__logo" aria-label={site.name} data-magnetic="0.2"><Logo /></a>
+
+  <a href={l(lang, '/contact/')} class="hdr__connect" data-cursor={d.chrome.letsConnect}>
+    <span class="hdr__online caps"><span class="dot-live"></span>{d.chrome.online}</span>
+    <span class="hdr__cta">
+      <span class="caps muted">{d.chrome.letsConnect}</span>
+      <span class="hdr__cta-big">{d.chrome.getInTouch}</span>
+    </span>
+  </a>
+
+  <nav class="hdr__nav" aria-label="Primary">
+    <ul>
+      {pages.map((p) => (
+        <li><a href={p.href} class:list={['caps', { active: isActive(p.href) }]} aria-current={isActive(p.href) ? 'page' : undefined}><span class="roll" data-text={p.label}><span>{p.label}</span></span></a></li>
+      ))}
+    </ul>
+    <ul>
+      {socials.map((s) => (
+        <li><a href={s.href} class="caps" target="_blank" rel="noopener"><span class="roll" data-text={s.label}><span>{s.label}</span></span></a></li>
+      ))}
+      <li><a href={swapLang(path, otherLang(lang))} class="caps blue" hreflang={otherLang(lang)} lang={otherLang(lang)}>{d.common.langName}</a></li>
+    </ul>
+  </nav>
+
+  <div class="hdr__mobile">
+    <a href={swapLang(path, otherLang(lang))} class="caps" hreflang={otherLang(lang)} lang={otherLang(lang)}>{d.common.langName}</a>
+    <button class="hdr__burger" data-menu-toggle aria-expanded="false" aria-controls="menu-overlay">
+      <span class="caps">{d.nav.menu}</span><span class="hdr__lines" aria-hidden="true"><i></i><i></i></span>
+    </button>
+  </div>
+</header>
+
+<div class="menu-overlay" id="menu-overlay">
+  <nav aria-label="Mobile">
+    <ol>
+      {pages.map((p, i) => (
+        <li style={`--d:${0.06 * i + 0.1}s`}><a href={p.href}><span class="mono">0{i + 1}</span>{p.label}</a></li>
+      ))}
+    </ol>
+    <div class="menu-overlay__foot">
+      {socials.map((s) => <a href={s.href} class="caps" target="_blank" rel="noopener">{s.label}</a>)}
+    </div>
+    <a href={l(lang, '/book/')} class="btn btn--blue">{d.common.bookCall}</a>
+  </nav>
+</div>
+
+<style>
+  .hdr { position: fixed; top: 0; inset-inline: 0; z-index: 100; display: grid; grid-template-columns: auto 1fr auto; align-items: start; gap: 24px; padding: 18px var(--gutter); pointer-events: none; }
+  .hdr > * { pointer-events: auto; }
+  .hdr__connect { display: flex; align-items: center; gap: 18px; justify-self: center; padding: 8px 18px 8px 12px; border-radius: 999px; background: rgb(245 246 249 / 0.7); backdrop-filter: blur(10px); border: 1px solid var(--line); }
+  .hdr__online { display: inline-flex; align-items: center; gap: 8px; color: var(--ok); font-weight: 600; }
+  .hdr__cta { display: grid; line-height: 1.1; }
+  .hdr__cta-big { font-family: var(--f-display); text-transform: uppercase; font-weight: 600; font-size: 0.95rem; letter-spacing: -0.01em; }
+  :root[lang='ar'] .hdr__cta-big { text-transform: none; }
+  .hdr__nav { display: grid; grid-template-columns: auto auto; gap: 0 46px; }
+  .hdr__nav ul { list-style: none; padding: 0; display: grid; gap: 1px; }
+  .hdr__nav a { display: inline-block; white-space: nowrap; }
+  .hdr__nav a.active { color: var(--blue); }
+  .hdr__nav a.active::before { content: '● '; font-size: 0.5rem; vertical-align: middle; }
+  .hdr__logo, .hdr__nav { transition: color 0.4s var(--ease); }
+  :global(html.header-dark) .hdr__logo, :global(html.header-dark) .hdr__nav, :global(html.header-dark) .hdr__mobile > a { color: #fff; }
+  :global(html.header-dark) .hdr__nav a.active { color: var(--blue-bright); }
+  .hdr__mobile { display: none; align-items: center; gap: 18px; }
+  .hdr__burger { display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 999px; background: var(--ink); color: #fff; }
+  .hdr__lines { display: grid; gap: 5px; width: 18px; }
+  .hdr__lines i { height: 1.5px; background: currentColor; transition: transform 0.4s var(--ease); }
+  :global(html.menu-open) .hdr__lines i:first-child { transform: translateY(3.25px) rotate(45deg); }
+  :global(html.menu-open) .hdr__lines i:last-child { transform: translateY(-3.25px) rotate(-45deg); }
+  @media (max-width: 1080px) { .hdr__connect { display: none; } }
+  @media (max-width: 860px) {
+    .hdr { grid-template-columns: 1fr auto; align-items: center; padding-block: 12px; background: rgb(233 236 241 / 0.82); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    :global(html.header-dark) .hdr, :global(html.menu-open) .hdr { background: transparent; backdrop-filter: none; }
+    .hdr__nav { display: none; }
+    .hdr__mobile { display: flex; }
+  }
+
+  .menu-overlay { position: fixed; inset: 0; z-index: 95; background: var(--blue); color: #fff; padding: 110px var(--gutter) 40px; clip-path: circle(0% at 100% 0); transition: clip-path 0.9s var(--ease-in-out); overflow-y: auto; }
+  [dir='rtl'] .menu-overlay { clip-path: circle(0% at 0 0); }
+  :global(html.menu-open) .menu-overlay { clip-path: circle(150% at 100% 0); }
+  :global(html.menu-open) .hdr__logo, :global(html.menu-open) .hdr__mobile > a { color: #fff; }
+  .menu-overlay ol { list-style: none; padding: 0; display: grid; gap: 4px; margin-bottom: 40px; }
+  .menu-overlay li { opacity: 0; transform: translateY(30px); transition: opacity 0.6s var(--ease) var(--d), transform 0.8s var(--ease) var(--d); }
+  :global(html.menu-open) .menu-overlay li { opacity: 1; transform: none; }
+  .menu-overlay li a { display: flex; align-items: baseline; gap: 14px; font-family: var(--f-display); font-size: clamp(2.4rem, 11vw, 4.5rem); text-transform: uppercase; letter-spacing: -0.04em; line-height: 1.05; }
+  :root[lang='ar'] .menu-overlay li a { text-transform: none; letter-spacing: 0; line-height: 1.5; }
+  .menu-overlay li .mono { font-size: 0.75rem; opacity: 0.6; }
+  .menu-overlay__foot { display: flex; flex-wrap: wrap; gap: 10px 22px; margin-bottom: 28px; }
+  .menu-overlay .btn { --bg-btn: #fff; --fg-btn: var(--ink); }
+</style>

@@ -1,0 +1,61 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import ContactForm from '../../components/ContactForm.astro';
+import { t } from '../../i18n';
+import { type Lang, langs } from '../../lib/url';
+import { site, waLink } from '../../config/site';
+
+export const getStaticPaths = () => langs.map((lang) => ({ params: { lang } }));
+const lang = Astro.params.lang as Lang;
+const d = t(lang);
+const b = d.book;
+const jsonld = [{
+  '@type': 'Service',
+  name: b.title,
+  description: b.metaDesc,
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD', description: '30-minute consultation' },
+  provider: { '@type': 'Organization', name: site.name },
+}];
+---
+<Base lang={lang} title={b.metaTitle} description={b.metaDesc} jsonld={jsonld}>
+  <PageHero eyebrow={lang === 'ar' ? '٣٠ دقيقة · مجانًا' : '30 min · Free'} title={lang === 'ar' ? 'احجز مكالمة' : 'Book a call'} script={lang === 'ar' ? 'لنتحدث' : 'let’s talk'} lead={b.lead} />
+
+  <section class="wrap bk">
+    <aside class="bk__info">
+      <div data-reveal>
+        <p class="caps blue">{b.whatTitle}</p>
+        <ol class="bk__list">{b.what.map((x, i) => <li><span class="mono blue">0{i + 1}</span>{x}</li>)}</ol>
+      </div>
+      <div data-reveal>
+        <p class="caps blue">{b.prepTitle}</p>
+        <ul class="bk__list bk__list--plain">{b.prep.map((x) => <li>{x}</li>)}</ul>
+      </div>
+      <a class="btn btn--ghost" href={waLink(lang === 'ar' ? 'مرحبًا، أريد حجز استشارة ٣٠ دقيقة' : 'Hi, I’d like to book the 30-minute consultation')} target="_blank" rel="noopener">{d.common.whatsapp}</a>
+    </aside>
+
+    <div class="bk__main" data-reveal>
+      {site.bookingUrl ? (
+        <iframe class="bk__embed" src={site.bookingUrl} title={b.title} loading="lazy"></iframe>
+      ) : (
+        <div class="bk__fallback">
+          <h2 class="h3">{b.fallbackTitle}</h2>
+          <p class="muted">{b.fallbackLead}</p>
+          <ContactForm lang={lang} mode="book" />
+        </div>
+      )}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .bk { display: grid; gap: 60px; padding-bottom: 120px; }
+  @media (min-width: 1000px) { .bk { grid-template-columns: 1fr 1.6fr; } .bk__info { position: sticky; top: 110px; align-self: start; } }
+  .bk__info { display: grid; gap: 36px; justify-items: start; }
+  .bk__info > div { width: 100%; }
+  .bk__list { list-style: none; padding: 0; margin-top: 12px; border-top: 1px solid var(--ink); }
+  .bk__list li { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--line); font-weight: 500; }
+  .bk__main { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: clamp(22px, 4vw, 48px); }
+  .bk__fallback { display: grid; gap: 16px; }
+  .bk__embed { width: 100%; min-height: 720px; border: 0; border-radius: 6px; }
+</style>

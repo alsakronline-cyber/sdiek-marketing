@@ -1,0 +1,29 @@
+---
+// Mark = an "S" drawn as a workflow connector: input node → S-curve → output node.
+interface Props { size?: number; wordmark?: boolean; class?: string; mono?: boolean }
+const { size = 34, wordmark = true, class: cls = '', mono = false } = Astro.props;
+---
+<span class:list={['logo', cls]} dir="ltr">
+  <svg class="logo__mark" width={size} height={size} viewBox="0 0 48 48" aria-hidden="true">
+    <path d="M34 11.5c-3-2.6-6.4-3.5-10-3.5-6 0-10 3.2-10 8s4 7 10 8 10 3.2 10 8-4 8-10 8c-3.6 0-7-.9-10-3.5"
+      fill="none" stroke="currentColor" stroke-width="4.4" stroke-linecap="round" />
+    <circle cx="35.5" cy="11" r="5" fill={mono ? 'currentColor' : 'var(--blue)'} />
+    <circle cx="12.5" cy="37" r="5" fill="currentColor" />
+    <circle cx="35.5" cy="11" r="1.8" fill="var(--bg)" />
+  </svg>
+  {wordmark && (
+    <span class="logo__word">
+      <span class="logo__name">sdiek</span>
+      <span class="logo__sub">marketing</span>
+    </span>
+  )}
+</span>
+
+<style>
+  .logo { display: inline-flex; align-items: center; gap: 10px; line-height: 1; }
+  .logo__mark { flex: none; transition: transform 0.8s var(--ease); }
+  a:hover .logo__mark { transform: rotate(180deg); }
+  .logo__word { display: grid; gap: 3px; }
+  .logo__name { font-family: 'Inter Tight Variable', sans-serif; font-weight: 700; font-size: 1.3rem; letter-spacing: -0.04em; text-transform: lowercase; }
+  .logo__sub { font-family: 'JetBrains Mono', monospace; font-size: 0.56rem; letter-spacing: 0.32em; text-transform: uppercase; opacity: 0.7; }
+</style>

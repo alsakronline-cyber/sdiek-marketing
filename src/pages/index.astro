@@ -1,0 +1,23 @@
+---
+import { u } from '../lib/url';
+const en = u('/en/');
+const ar = u('/ar/');
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sdiek Marketing</title>
+    <meta name="robots" content="noindex" />
+    <link rel="canonical" href={new URL(en, Astro.site).href} />
+    <link rel="alternate" hreflang="en" href={new URL(en, Astro.site).href} />
+    <link rel="alternate" hreflang="ar" href={new URL(ar, Astro.site).href} />
+    <meta http-equiv="refresh" content={`1; url=${en}`} />
+    <script is:inline define:vars={{ en, ar }}>
+      location.replace((navigator.language || '').toLowerCase().startsWith('ar') ? ar : en);
+    </script>
+    <style>body{margin:0;background:#2a5bff;min-height:100vh}</style>
+  </head>
+  <body><a href={en} style="color:#fff;font-family:sans-serif;padding:20px;display:block">Sdiek Marketing →</a></body>
+</html>

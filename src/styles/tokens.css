@@ -1,0 +1,36 @@
+:root {
+  --bg: #e9ecf1;
+  --surface: #f5f6f9;
+  --surface-2: #dde2ea;
+  --ink: #0b1424;
+  --ink-2: #1b2638;
+  --muted: #586378;
+  --line: #c6cdd8;
+  --line-blue: rgb(42 91 255 / 0.28);
+  --blue: #2a5bff;
+  --blue-bright: #14a8ff;
+  --blue-deep: #0a2a8f;
+  --blue-soft: #d6e0ff;
+  --ok: #12b76a;
+
+  --grad: linear-gradient(120deg, var(--blue) 0%, var(--blue-bright) 100%);
+
+  --f-display: 'Inter Tight Variable', 'IBM Plex Sans Arabic', system-ui, sans-serif;
+  --f-body: 'Inter Variable', 'IBM Plex Sans Arabic', system-ui, sans-serif;
+  --f-script: 'Pinyon Script', 'Aref Ruqaa', cursive;
+  --f-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --r-sm: 10px;
+  --r: 18px;
+  --r-lg: 28px;
+  --gutter: clamp(16px, 3.4vw, 48px);
+  --max: 1440px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+:root[lang='ar'] {
+  --f-display: 'IBM Plex Sans Arabic', system-ui, sans-serif;
+  --f-body: 'IBM Plex Sans Arabic', system-ui, sans-serif;
+  --f-script: 'Aref Ruqaa', serif;
+}

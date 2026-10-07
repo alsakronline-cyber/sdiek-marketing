@@ -1,0 +1,28 @@
+---
+// Inner-page header: giant uppercase title + script accent + lead, with construction lines.
+interface Props { eyebrow?: string; title: string; script?: string; lead?: string }
+const { eyebrow, title, script, lead } = Astro.props;
+---
+<section class="ph">
+  <div class="construct" aria-hidden="true">
+    <svg viewBox="0 0 1000 500" preserveAspectRatio="none">
+      <line data-draw x1="0" y1="500" x2="1000" y2="0" /><line data-draw x1="640" y1="0" x2="640" y2="500" />
+      <rect data-draw x="640" y="0" width="360" height="250" />
+    </svg>
+  </div>
+  <div class="wrap ph__inner">
+    {eyebrow && <p class="caps blue" data-reveal>{eyebrow}</p>}
+    <h1 class="ph__title" data-split>{title}</h1>
+    {script && <p class="ph__script script" data-reveal style="--d:.35s">{script}</p>}
+    {lead && <p class="lead" data-reveal style="--d:.45s">{lead}</p>}
+    <slot />
+  </div>
+</section>
+
+<style>
+  .ph { position: relative; padding-top: clamp(150px, 20vw, 230px); padding-bottom: clamp(60px, 8vw, 110px); overflow: hidden; }
+  .ph__inner { position: relative; z-index: 1; display: grid; gap: 22px; }
+  .ph__title { font-size: clamp(3.4rem, 13vw, 12rem); line-height: 0.85; letter-spacing: -0.06em; }
+  :root[lang='ar'] .ph__title { font-size: clamp(2.8rem, 10vw, 8rem); line-height: 1.2; letter-spacing: 0; }
+  .ph__script { font-size: clamp(2.4rem, 6vw, 5rem); margin-top: -0.4em; margin-inline-start: 12vw; }
+</style>

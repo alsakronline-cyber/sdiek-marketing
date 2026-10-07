@@ -1,0 +1,47 @@
+---
+import Base from '../../../layouts/Base.astro';
+import PageHero from '../../../components/PageHero.astro';
+import { t } from '../../../i18n';
+import { type Lang, l, langs } from '../../../lib/url';
+import { postsFor, postSlug, fmtDate } from '../../../lib/blog';
+
+export const getStaticPaths = () => langs.map((lang) => ({ params: { lang } }));
+const lang = Astro.params.lang as Lang;
+const d = t(lang);
+const posts = await postsFor(lang);
+const jsonld = [{ '@type': 'Blog', name: d.blog.metaTitle, inLanguage: lang, blogPost: posts.map((p) => ({ '@type': 'BlogPosting', headline: p.data.title, datePublished: p.data.date.toISOString(), url: new URL(l(lang, `/blog/${postSlug(p.id)}/`), Astro.site).href })) }];
+---
+<Base lang={lang} title={d.blog.metaTitle} description={d.blog.metaDesc} jsonld={jsonld}>
+  <PageHero title={d.blog.title} script={d.hero.journalScript} lead={d.blog.lead} />
+  <section class="wrap bl">
+    <ol class="bl__list">
+      {posts.map((p, i) => (
+        <li data-reveal style={`--d:${i * 0.06}s`}>
+          <a href={l(lang, `/blog/${postSlug(p.id)}/`)} class="bl__row" data-cursor={d.common.readMore}>
+            <span class="mono blue">{String(i + 1).padStart(2, '0')}</span>
+            <div class="bl__main">
+              <h2 class="bl__title">{p.data.title}</h2>
+              <p class="muted">{p.data.description}</p>
+            </div>
+            <div class="bl__meta caps muted">
+              <time datetime={p.data.date.toISOString()}>{fmtDate(p.data.date, lang)}</time>
+              <span>{p.data.readingMinutes} {d.common.minRead}</span>
+            </div>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </section>
+</Base>
+
+<style>
+  .bl { padding-bottom: 120px; }
+  .bl__list { list-style: none; padding: 0; border-top: 1px solid var(--ink); }
+  .bl__row { display: grid; gap: 12px 30px; padding: 34px 0; border-bottom: 1px solid var(--line); grid-template-columns: 40px 1fr; }
+  @media (min-width: 900px) { .bl__row { grid-template-columns: 60px 1fr 220px; align-items: start; } }
+  .bl__main { display: grid; gap: 10px; }
+  .bl__title { font-size: clamp(1.6rem, 3.6vw, 3rem); text-transform: none; letter-spacing: -0.035em; line-height: 1.05; transition: color 0.3s; }
+  .bl__row:hover .bl__title { color: var(--blue); }
+  .bl__meta { display: grid; gap: 4px; grid-column: 2; }
+  @media (min-width: 900px) { .bl__meta { grid-column: 3; text-align: end; } }
+</style>
