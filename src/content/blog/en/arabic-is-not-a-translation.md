@@ -58,4 +58,4 @@ Read every Arabic page on a phone, out loud. If a sentence sounds like a transla
 
 Arabic search results are far less competitive than English ones in most B2B niches. A properly built Arabic version is often the fastest SEO win a MENA business can get.
 
-Want an audit of your Arabic site? [Book a free 30-minute call](/en/book/).
+Want an audit of your Arabic site? [Book a free 30-minute call](../../book/).

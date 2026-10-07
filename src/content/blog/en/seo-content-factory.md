@@ -57,4 +57,4 @@ You don't need 39,000 products to benefit. The same structure works for a 300-pr
 4. Automate the boring SEO hygiene: categories, tags, schema, internal links.
 5. Report weekly, in plain language.
 
-If your catalogue is bigger than your content team, [let's talk for 30 minutes](/en/book/).
+If your catalogue is bigger than your content team, [let's talk for 30 minutes](../../book/).

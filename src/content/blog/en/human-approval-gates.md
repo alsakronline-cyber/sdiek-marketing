@@ -52,4 +52,4 @@ Some flows earn auto-approval: product-page enrichment that has passed QA checks
 
 Automation that you trust is worth ten times more than automation you're nervous about. Put the gate in, keep it to one tap, and let the rejections train the system.
 
-If you want this pattern wired into your own content or sales process, [book a free 30-minute call](/en/book/) and we'll map it together.
+If you want this pattern wired into your own content or sales process, [book a free 30-minute call](../../book/) and we'll map it together.
