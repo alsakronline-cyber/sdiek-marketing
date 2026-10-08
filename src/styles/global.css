@@ -27,13 +27,6 @@ html.lenis, html.lenis body { height: auto; }
 html.has-cursor, html.has-cursor a, html.has-cursor button, html.has-cursor [data-cursor] { cursor: none; }
 html.has-cursor :is(input, textarea, select) { cursor: text; }
 
-/* Paper grain over everything (very subtle) */
-body::after {
-  content: ''; position: fixed; inset: -50%; z-index: 998; pointer-events: none; opacity: 0.05;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  animation: grain 1.2s steps(6) infinite;
-}
-@keyframes grain { 0%,100% { transform: translate(0,0); } 20% { transform: translate(-3%,2%); } 40% { transform: translate(2%,-4%); } 60% { transform: translate(-4%,-1%); } 80% { transform: translate(3%,3%); } }
 
 /* ── Layout ──────────────────────────────────────── */
 .wrap { width: 100%; max-width: var(--max); margin-inline: auto; padding-inline: var(--gutter); }
@@ -49,13 +42,13 @@ h1, h2, h3, h4 { font-family: var(--f-display); font-weight: 500; line-height: 0
 .giant { font-size: clamp(4rem, 17vw, 17rem); line-height: 0.82; letter-spacing: -0.06em; }
 :root[lang='ar'] .giant { font-size: clamp(3rem, 12vw, 11rem); line-height: 1.2; }
 .h1 { font-size: clamp(3rem, 9vw, 8.5rem); }
-.h2 { font-size: clamp(2.2rem, 5.6vw, 5rem); }
+.h2 { font-size: clamp(2rem, 4.4vw, 3.8rem); }
 .h3 { font-size: clamp(1.3rem, 2vw, 1.8rem); letter-spacing: -0.02em; }
 .script { font-family: var(--f-script); font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--blue); line-height: 1; }
 .caps { text-transform: uppercase; font-size: 0.78rem; letter-spacing: 0.04em; font-weight: 500; line-height: 1.35; }
 :root[lang='ar'] .caps { text-transform: none; letter-spacing: 0; font-size: 0.92rem; }
-.statement { font-family: var(--f-display); text-transform: uppercase; font-size: clamp(1.15rem, 2.1vw, 1.9rem); line-height: 1.2; letter-spacing: -0.01em; font-weight: 500; }
-:root[lang='ar'] .statement { text-transform: none; line-height: 1.7; }
+.statement { font-family: var(--f-display); font-size: clamp(1.2rem, 2vw, 1.75rem); line-height: 1.35; letter-spacing: -0.02em; font-weight: 500; }
+:root[lang='ar'] .statement { line-height: 1.75; letter-spacing: 0; }
 .lead { font-size: clamp(1.05rem, 1.4vw, 1.25rem); line-height: 1.55; color: var(--muted); max-width: 48ch; }
 .muted { color: var(--muted); }
 .mono { font-family: var(--f-mono); font-size: 0.74rem; letter-spacing: 0.06em; text-transform: uppercase; }
@@ -143,6 +136,11 @@ html.has-cursor .cursor, html.has-cursor .cursor-dot { display: block; }
 .rail > * { flex: none; padding-inline-end: 0.35em; white-space: nowrap; }
 @keyframes rail { to { transform: translateX(-50%); } }
 [dir='rtl'] .rail { animation-direction: reverse; }
+
+/* ── Section header ─────────────────────────────── */
+.sec-head { display: grid; gap: 18px; margin-bottom: clamp(40px, 5vw, 64px); }
+.sec-head .caps { margin-bottom: 12px; }
+@media (min-width: 900px) { .sec-head { grid-template-columns: 1.2fr 1fr; align-items: end; } }
 
 /* ── Forms ───────────────────────────────────────── */
 .field { display: grid; gap: 6px; }

@@ -35,6 +35,13 @@ export const en = {
     socials: 'Social',
   },
   hero: {
+    available: 'Available for new projects · Q4 2026',
+    titleA: 'Marketing',
+    titleB: 'that runs',
+    titleScript: 'itself.',
+    byline: 'Mohamed Ramadan — founder, marketer who codes',
+    panelTitle: 'A system, not a campaign',
+    panelFoot: 'Website · SEO · Automation · Ads · Data',
     rail: 'Marketing that runs itself —',
     intro: 'I design, build and automate the websites, content engines and AI systems that bring you customers — and keep working while you sleep.',
     roles: ['Marketer who codes', 'Automation architect', 'Web & SEO builder'],

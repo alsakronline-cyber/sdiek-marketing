@@ -117,7 +117,7 @@ function fluid() {
       if (p.life <= 0) { parts.splice(i, 1); continue; }
       const g = ctx.createRadialGradient(p.x * dpr, p.y * dpr, 0, p.x * dpr, p.y * dpr, p.r * dpr);
       const col = p.hue > 0.5 ? '42,91,255' : '20,168,255';
-      g.addColorStop(0, `rgba(${col},${0.10 * p.life})`);
+      g.addColorStop(0, `rgba(${col},${0.05 * p.life})`);
       g.addColorStop(1, `rgba(${col},0)`);
       ctx.fillStyle = g;
       ctx.beginPath(); ctx.arc(p.x * dpr, p.y * dpr, p.r * dpr, 0, Math.PI * 2); ctx.fill();
@@ -244,8 +244,9 @@ function scrollFx() {
     }
     // Header switches to light text while a dark band sits under it
     let dark = false;
-    for (const el of darks) { const r = el.getBoundingClientRect(); if (r.top <= 50 && r.bottom >= 50) { dark = true; break; } }
+    for (const el of darks) { const r = el.getBoundingClientRect(); if (r.top <= 40 && r.bottom >= 40) { dark = true; break; } }
     root.classList.toggle('header-dark', dark);
+    root.classList.toggle('scrolled', scrollY > 40);
     for (const el of pins) {
       const r = el.getBoundingClientRect();
       const p = clamp(-r.top / Math.max(1, r.height - vh));

@@ -49,13 +49,13 @@ Light theme only (brief: "light in both gray and blue"). Dark `--ink` bands are 
 - Arabic (text): **IBM Plex Sans Arabic** — no uppercase, no letter-spacing, animate by word only.
 All self-hosted via `@fontsource*`.
 
-### Design language (reference: meermohsin.me, re-coloured to gray + blue)
-The layout and motion follow the reference site's structure, using our own copy, assets and palette — never its text, images or 3D models.
-- **Preloader**: blue screen, script counter `000 → 100`, once per session.
-- **Chrome**: logo top-left · "● Online / Let's connect — Get in touch" pill top-centre · two plain-caps nav columns top-right (pages | channels + language) · fixed 3-word ledger at the bottom (*Strategy · Systems · Scale*) · custom cursor ring with labels · blue ink trail following the mouse · scroll progress line. Header turns white over `[data-dark]` sections.
-- **Hero**: torn-paper blue strip (left half) with intro text, giant uppercase rail (*Marketing that runs itself —*) scrolling sideways (white inside the strip, ink outside), the logo mark in 3D following the mouse, name + roles below.
-- **Sections**: pinned statement with a script word (*This will **run** without you*), torn blue sticky panel with scroll-scrubbed text + counting facts, expertise rows that fill blue on hover, work list with sticky number sidebar + floating cursor preview, process steps around a glowing vertical beam on ink, script "Journal" list, closing CTA with rotating circular badge, ink footer with giant outlined wordmark rail.
-- Thin blue **construction lines** (diagonals, circles) draw themselves behind sections.
+### Design language (v2 — 2026-10-08 declutter pass)
+Started from the meermohsin.me structure; v2 removed visual noise after feedback that v1 was "too crowded".
+- **Calm by default**: one idea per section, generous whitespace, sentence-case body copy (uppercase only for short headings/labels), no decorative construction lines, no grain, no giant logo mark.
+- **Chrome**: single header row (logo · 5 links · language · *Book a call*), turns into a frosted pill after 40px of scroll and inverts over `[data-dark]` sections. No fixed bottom bar.
+- **Motion kept, but subtle**: preloader counter (once per session), cursor ring with labels, faint blue mouse trail, split-text and fade reveals, magnetic buttons, hover lift on cards. Everything off under `prefers-reduced-motion`.
+- **Home order**: hero (headline + script word, lead, 2 CTAs, blue "system" panel) → 4-stat proof row → 6 featured project cards → manifesto → services grid (4×2) → process (5 steps, ink) → journal cards → closing CTA → footer.
+- The logo mark appears only at logo size (header, footer, favicon, curtain).
 
 ### Voice
 - Confident, concrete, engineer-to-founder. Show the system, name the tool, give the number.

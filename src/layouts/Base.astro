@@ -118,10 +118,6 @@ const graph = [
 
     <Footer lang={lang} />
 
-    <!-- Fixed ledger bar (bottom) -->
-    <div class="ledger" aria-hidden="true">
-      {d.chrome.ledger.map((w) => <span class="caps">{w}</span>)}
-    </div>
 
     <div class="hover-preview" aria-hidden="true">
       <img alt="" width="480" height="300" />
@@ -150,10 +146,6 @@ const graph = [
   .curtain.leaving { transform: translateY(0); }
 
   /* Ledger */
-  .ledger { position: fixed; bottom: 0; inset-inline: 0; z-index: 90; display: grid; grid-template-columns: repeat(3, 1fr); padding: 12px var(--gutter); pointer-events: none; color: var(--ink); }
-  .ledger span { text-align: center; transition: color 0.4s; }
-  html.header-dark .ledger { color: #fff; }
-  @media (max-width: 700px) { .ledger { display: none; } }
 
   /* Hover preview */
   .hover-preview { position: fixed; top: 0; left: 0; z-index: 80; width: min(420px, 34vw); aspect-ratio: 16 / 10; pointer-events: none; opacity: 0; transition: opacity 0.35s var(--ease); border-radius: 6px; overflow: hidden; box-shadow: 0 30px 60px -20px rgb(11 20 36 / 0.45); }

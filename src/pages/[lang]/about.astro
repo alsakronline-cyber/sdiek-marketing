@@ -1,7 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
 import PageHero from '../../components/PageHero.astro';
-import Logo from '../../components/Logo.astro';
 import { t } from '../../i18n';
 import { type Lang, l, langs } from '../../lib/url';
 import { projects } from '../../data/projects';
@@ -17,11 +16,20 @@ const jsonld = [{ '@type': 'AboutPage', name: a.metaTitle, inLanguage: lang, mai
   <PageHero eyebrow={a.title} title={a.hello} script={d.hero.roles[0]} />
 
   <section class="ab wrap">
-    <div class="ab__portrait torn blue-block" data-reveal>
-      <!-- TODO: replace with a real portrait (docs/MISSING.md). The mark tracks the mouse meanwhile. -->
-      <div class="ab__mark" data-track="18"><Logo size={300} wordmark={false} mono /></div>
-      <span class="caps ab__cap">Mohamed Ramadan · Sdiek Marketing</span>
-    </div>
+    <aside class="ab__card" data-reveal>
+      <!-- TODO: swap the initials for a real portrait (docs/MISSING.md) -->
+      <div class="ab__avatar" aria-hidden="true">MR</div>
+      <div class="ab__who">
+        <p class="ab__name">{d.hero.name}</p>
+        <p class="muted">{lang === 'ar' ? 'المؤسس · مسوّق يبرمج' : 'Founder · Marketer who codes'}</p>
+      </div>
+      <dl class="ab__facts">
+        <div><dt class="caps muted">{lang === 'ar' ? 'المقر' : 'Based in'}</dt><dd>{lang === 'ar' ? 'القاهرة، مصر' : 'Cairo, Egypt'}</dd></div>
+        <div><dt class="caps muted">{lang === 'ar' ? 'اللغات' : 'Languages'}</dt><dd>{lang === 'ar' ? 'العربية، الإنجليزية' : 'Arabic, English'}</dd></div>
+        <div><dt class="caps muted">{lang === 'ar' ? 'المشاريع' : 'Projects'}</dt><dd>{projects.length}</dd></div>
+        <div><dt class="caps muted">{lang === 'ar' ? 'الحالة' : 'Status'}</dt><dd class="ab__avail"><span class="dot-live"></span>{d.hero.available}</dd></div>
+      </dl>
+    </aside>
     <div class="ab__text">
       <p class="statement" data-reveal>{a.lead}</p>
       {a.body.map((p, i) => <p class="ab__p" data-reveal style={`--d:${0.1 * (i + 1)}s`}>{p}</p>)}
@@ -57,20 +65,23 @@ const jsonld = [{ '@type': 'AboutPage', name: a.metaTitle, inLanguage: lang, mai
 
 <style>
   .ab { display: grid; gap: 50px; padding-bottom: 120px; }
-  @media (min-width: 900px) { .ab { grid-template-columns: 1fr 1.1fr; align-items: start; } }
-  .ab__portrait { position: relative; aspect-ratio: 4 / 5; display: grid; place-items: center; overflow: hidden; perspective: 900px; }
-  @media (min-width: 900px) { .ab__portrait { position: sticky; top: 100px; } }
-  .ab__mark { width: 60%; color: #fff; will-change: transform; }
-  .ab__mark :global(svg) { width: 100%; height: auto; }
-  .ab__cap { position: absolute; bottom: 30px; inset-inline-start: 24px; }
+  @media (min-width: 900px) { .ab { grid-template-columns: 0.8fr 1.3fr; align-items: start; gap: 80px; } }
+  .ab__card { display: grid; gap: 24px; align-content: start; padding: 32px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); }
+  @media (min-width: 900px) { .ab__card { position: sticky; top: 110px; } }
+  .ab__avatar { width: 96px; height: 96px; border-radius: 50%; display: grid; place-items: center; background: var(--blue); color: #fff; font-family: var(--f-display); font-size: 2rem; font-weight: 600; letter-spacing: -0.03em; }
+  .ab__name { font-family: var(--f-display); font-size: 1.6rem; font-weight: 500; letter-spacing: -0.03em; }
+  .ab__facts { display: grid; border-top: 1px solid var(--line); }
+  .ab__facts > div { display: flex; justify-content: space-between; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .ab__facts dd { margin: 0; font-weight: 500; text-align: end; }
+  .ab__avail { display: inline-flex; align-items: center; gap: 8px; font-size: 0.9rem; }
   .ab__text { display: grid; gap: 24px; }
-  .ab__text .statement { font-size: clamp(1.4rem, 2.6vw, 2.3rem); }
+  .ab__text .statement { font-size: clamp(1.3rem, 2.2vw, 1.9rem); }
   .ab__p { font-size: 1.1rem; line-height: 1.75; max-width: 58ch; }
   .pr__title { text-align: center; margin-bottom: 60px; }
-  .pr__title .script { font-size: clamp(3.5rem, 9vw, 7rem); color: #fff; }
+  .pr__title .script { font-size: clamp(2.8rem, 6vw, 5rem); color: #fff; }
   .pr__list { list-style: none; padding: 0; display: grid; gap: 30px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
   .pr__list li { display: grid; gap: 10px; border-top: 1px solid rgb(255 255 255 / 0.15); padding-top: 24px; }
   .tb { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
-  .tb__item { font-family: var(--f-display); font-size: clamp(1.1rem, 2.2vw, 1.8rem); text-transform: uppercase; letter-spacing: -0.02em; padding: 8px 18px; border: 1px solid var(--line); border-radius: 999px; transition: background 0.3s, color 0.3s; }
+  .tb__item { font-family: var(--f-display); font-size: 1rem; letter-spacing: -0.01em; padding: 8px 16px; border: 1px solid var(--line); border-radius: 999px; transition: background 0.3s, color 0.3s; }
   .tb__item:hover { background: var(--blue); color: #fff; border-color: var(--blue); }
 </style>
