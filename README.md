@@ -2,6 +2,10 @@
 
 Personal brand + studio site for **Sdiek Marketing** by Mohamed Ramadan — bilingual (EN / AR), built with Astro.
 
+**Live:** https://alsakronline-cyber.github.io/sdiek-marketing/ · [English](https://alsakronline-cyber.github.io/sdiek-marketing/en/) · [العربية](https://alsakronline-cyber.github.io/sdiek-marketing/ar/)
+
+![Sdiek Marketing](public/og.png)
+
 - Brand & build rules: [`CLAUDE.md`](CLAUDE.md)
 - Open items before launch: [`docs/MISSING.md`](docs/MISSING.md)
 
