@@ -1,0 +1,53 @@
+---
+// Study: scroll-driven journey of a B2B order (idea credited to AskLex on the Lab page).
+// Uses the global [data-pin] → --prog (0..1) from motion.ts; stages light up in sequence.
+import type { Lang } from '../../lib/url';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const ar = lang === 'ar';
+const stages = ar
+  ? [
+      { time: '00:00', t: 'وصل طلب عرض سعر', d: 'من الموقع أو واتساب — يُسجَّل تلقائيًا.' },
+      { time: '00:02', t: 'مسودة عرض بالذكاء الاصطناعي', d: 'الأصناف والأسعار من الـ ERP في دقيقتين.' },
+      { time: '00:15', t: 'موافقة وإرسال', d: 'ضغطة موافقة على تيليجرام، ثم يُرسل للعميل.' },
+      { time: '+1 يوم', t: 'تحوّل إلى طلب', d: 'متابعة آلية حتى يؤكد العميل.' },
+      { time: '+3 أيام', t: 'تسليم وتقييم', d: 'رسالة تتبّع، ثم طلب تقييم ومحتوى جديد.' },
+    ]
+  : [
+      { time: '00:00', t: 'RFQ arrives', d: 'From the site or WhatsApp — logged automatically.' },
+      { time: '00:02', t: 'AI drafts the quote', d: 'Items and prices pulled from the ERP in two minutes.' },
+      { time: '00:15', t: 'Approved & sent', d: 'One tap on Telegram, then it goes to the client.' },
+      { time: '+1 day', t: 'Becomes an order', d: 'Automatic follow-ups until the client confirms.' },
+      { time: '+3 days', t: 'Delivered & reviewed', d: 'Tracking message, then a review request and new content.' },
+    ];
+---
+<div class="jny" data-pin style={`--n:${stages.length}`}>
+  <div class="jny__sticky">
+    <div class="jny__track" aria-hidden="true"><div class="jny__fill"></div></div>
+    <ol class="jny__stages">
+      {stages.map((s, i) => (
+        <li style={`--i:${i}`}>
+          <span class="jny__dot" aria-hidden="true"></span>
+          <span class="mono jny__time" dir="ltr">{s.time}</span>
+          <strong>{s.t}</strong>
+          <p>{s.d}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</div>
+
+<style>
+  .jny { height: 260vh; position: relative; }
+  .jny__sticky { position: sticky; top: 90px; min-height: calc(100vh - 140px); display: grid; align-content: center; gap: 0; padding: 40px clamp(20px, 4vw, 48px); border-radius: 14px; background: var(--ink); color: #e6ebf4; overflow: hidden; }
+  .jny__track { position: absolute; inset-block: 60px; inset-inline-start: calc(clamp(20px, 4vw, 48px) + 7px); width: 2px; background: rgb(255 255 255 / 0.12); }
+  .jny__fill { width: 100%; height: calc(var(--prog, 0) * 100%); background: linear-gradient(var(--blue), var(--blue-bright)); box-shadow: 0 0 18px var(--blue-bright); }
+  .jny__stages { list-style: none; padding: 0; display: grid; gap: clamp(18px, 3.4vh, 34px); position: relative; }
+  .jny__stages li { --on: clamp(0, calc((var(--prog, 0) * var(--n) - var(--i)) * 2), 1); display: grid; grid-template-columns: 16px 90px 1fr; gap: 4px 18px; align-items: baseline; opacity: calc(0.28 + var(--on) * 0.72); transition: opacity 0.2s; }
+  .jny__dot { width: 16px; height: 16px; border-radius: 50%; border: 2px solid rgb(255 255 255 / 0.3); background: var(--ink); align-self: center; box-shadow: 0 0 0 calc(var(--on) * 6px) rgb(42 91 255 / 0.35); }
+  .jny__stages li strong { font-family: var(--f-display); font-size: clamp(1.2rem, 2.4vw, 1.8rem); font-weight: 500; letter-spacing: -0.02em; color: #fff; }
+  .jny__time { color: var(--blue-bright); }
+  .jny__stages li p { grid-column: 3; color: #a9b5c9; font-size: 0.93rem; }
+  @media (max-width: 640px) { .jny__stages li { grid-template-columns: 16px 1fr; } .jny__time { grid-column: 2; } .jny__stages li strong, .jny__stages li p { grid-column: 2; } }
+  @media (prefers-reduced-motion: reduce) { .jny { height: auto; } .jny__sticky { position: static; } .jny__stages li { opacity: 1; } .jny__fill { height: 100%; } }
+</style>

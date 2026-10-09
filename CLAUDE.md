@@ -104,6 +104,8 @@ Non-web systems are illustrated by the animated **FlowDiagram** component built 
 | jarvis | Jarvis — voice AI ops assistant | lab | personal |
 | video-factory | Automated video factory | lab | R&D |
 
+**Lab page** (`/lab/`): (1) coded concept studies in `src/components/studies/` — our own code, each labelled "Concept study — not a client project" and crediting the site that inspired the idea; (2) inspiration board from `src/data/inspiration.ts` — third-party Awwwards nominees, always with studio credit + live + Awwwards links (`npm run shots -- --inspiration`). **Never move third-party sites into `projects.ts` or present them as Sdiek work.**
+
 Testimonials: `src/data/testimonials.ts`. Only entries with `approved: true` render. Drafts are templates to send to the client for sign-off.
 
 ---

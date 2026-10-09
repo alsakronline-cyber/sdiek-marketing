@@ -1,4 +1,5 @@
-// Capture above-the-fold screenshots of the live portfolio sites -> public/work/*.webp
+// Capture above-the-fold screenshots -> public/work/*.webp (portfolio) or public/inspiration/*.webp
+// Usage: npm run shots [slug...]   |   npm run shots -- --inspiration [slug...]
 // Uses the locally installed Chrome/Edge via puppeteer-core (no browser download).
 import puppeteer from 'puppeteer-core';
 import { existsSync, mkdirSync } from 'node:fs';
@@ -13,7 +14,7 @@ const candidates = [
 const executablePath = candidates.find((p) => existsSync(p));
 if (!executablePath) throw new Error('No Chrome/Edge found. Set CHROME_PATH.');
 
-const shots = [
+const work = [
   ['alsakr-online', 'https://alsakronline.com'],
   ['nexumotion', 'https://nexumotion.com'],
   ['iconic-mach', 'https://iconicmach.com/en/'],
@@ -21,8 +22,25 @@ const shots = [
   ['walaa-3d', 'https://walaa3d.studio'],
   ['nutrasakr', 'https://nutrasakr.com'],
 ];
-const only = process.argv.slice(2);
-mkdirSync('public/work', { recursive: true });
+// Third-party Awwwards nominees for the credited inspiration board (src/data/inspiration.ts)
+const inspiration = [
+  ['alpeniq', 'https://alpeniq.ch/'],
+  ['rogers-obrien', 'https://r-o.com/'],
+  ['olympic-subsea', 'https://www.olympic.no/'],
+  ['cognichip', 'http://cognichip.ai/'],
+  ['teatika', 'https://teatika.com/'],
+  ['asklex', 'https://asklex.law/journey/'],
+  ['wiemer', 'https://www.wiemer.store/'],
+  ['type-something', 'https://typesomething.co/'],
+  ['hart-studio', 'https://madebyhart.com/'],
+  ['santal', 'https://santalarch.com/'],
+];
+const args = process.argv.slice(2);
+const isInspo = args.includes('--inspiration');
+const only = args.filter((a) => !a.startsWith('--'));
+const shots = isInspo ? inspiration : work;
+const outDir = isInspo ? 'public/inspiration' : 'public/work';
+mkdirSync(outDir, { recursive: true });
 
 const browser = await puppeteer.launch({ executablePath, headless: true, args: ['--hide-scrollbars'] });
 for (const [slug, url] of shots) {
@@ -32,7 +50,7 @@ for (const [slug, url] of shots) {
   try {
     await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
     // let hero videos/animations settle, dismiss nothing (no consent clicking)
-    await new Promise((r) => setTimeout(r, 3500));
+    await new Promise((r) => setTimeout(r, isInspo ? 12000 : 3500)); // heavy WebGL sites need longer
     // Hide cookie/consent overlays visually for the screenshot (never accepts anything).
     await page.evaluate(() => {
       document.querySelectorAll('body *').forEach((el) => {
@@ -46,7 +64,7 @@ for (const [slug, url] of shots) {
       document.scrollingElement.scrollLeft = document.documentElement.dir === 'rtl' ? 0 : 0;
     });
     await new Promise((r) => setTimeout(r, 300));
-    await page.screenshot({ path: `public/work/${slug}.webp`, type: 'webp', quality: 82, captureBeyondViewport: false });
+    await page.screenshot({ path: `${outDir}/${slug}.webp`, type: 'webp', quality: isInspo ? 70 : 82, captureBeyondViewport: false });
     console.log('✓', slug);
   } catch (e) {
     console.log('✗', slug, e.message);

@@ -1,0 +1,79 @@
+---
+// Study: services as a stack of connected layers (idea credited to ALPENIQ on the Lab page).
+// Isometric CSS planes; hovering the stack separates it, hovering a label lifts that layer.
+import type { Lang } from '../../lib/url';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const ar = lang === 'ar';
+const layers = ar
+  ? [
+      { t: 'البيانات', d: 'لوحات وتقارير يومية تقول ما الذي تغيّر.' },
+      { t: 'الأتمتة', d: 'مسارات n8n ووكلاء ذكاء اصطناعي مع موافقة بشرية.' },
+      { t: 'المحتوى', d: 'مقالات ومنشورات تُكتب وتُجدول وتُعتمد من الهاتف.' },
+      { t: 'السيو', d: 'بنية تقنية وكلمات وروابط داخلية.' },
+      { t: 'الموقع', d: 'الأساس: سريع وثنائي اللغة ومبني للتحويل.' },
+    ]
+  : [
+      { t: 'Data', d: 'Dashboards and a daily report that says what changed.' },
+      { t: 'Automation', d: 'n8n workflows and AI agents with human approval.' },
+      { t: 'Content', d: 'Articles and posts written, scheduled and approved from your phone.' },
+      { t: 'SEO', d: 'Technical structure, keywords and internal links.' },
+      { t: 'Website', d: 'The foundation: fast, bilingual, built to convert.' },
+    ];
+const n = layers.length;
+---
+<div class="lyr" data-lyr>
+  <div class="lyr__stage" aria-hidden="true">
+    <div class="lyr__stack">
+      {layers.map((l, i) => (
+        <div class="lyr__plane" style={`--i:${n - 1 - i}`} data-lyr-plane={i}>
+          <span>{l.t}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+  <ol class="lyr__list">
+    {layers.map((l, i) => (
+      <li data-lyr-item={i} tabindex="0">
+        <span class="mono blue">{String(n - i).padStart(2, '0')}</span>
+        <div><strong>{l.t}</strong><p class="muted">{l.d}</p></div>
+      </li>
+    ))}
+  </ol>
+</div>
+
+<style>
+  .lyr { display: grid; gap: 28px; align-items: center; }
+  @media (min-width: 900px) { .lyr { grid-template-columns: 1.2fr 1fr; } }
+  .lyr__stage { min-height: 420px; display: grid; place-items: center; border-radius: 14px; border: 1px solid var(--line); background: radial-gradient(circle at 50% 45%, #fff, var(--surface-2)); perspective: 1400px; overflow: hidden; }
+  .lyr__stack { --gap: 26px; position: relative; width: 240px; height: 240px; transform-style: preserve-3d; transform: rotateX(58deg) rotateZ(-42deg); transition: transform 0.8s var(--ease); }
+  .lyr:hover .lyr__stack, .lyr:focus-within .lyr__stack { --gap: 58px; }
+  .lyr__plane { position: absolute; inset: 0; border-radius: 16px; background: rgb(245 246 249 / 0.92); border: 1px solid var(--line); box-shadow: 0 30px 40px -30px rgb(11 20 36 / 0.45);
+    transform: translateZ(calc(var(--i) * var(--gap))); transition: transform 0.8s var(--ease), background 0.4s, border-color 0.4s, color 0.4s; display: grid; place-items: center; }
+  .lyr__plane span { font-family: var(--f-display); font-weight: 600; font-size: 1.4rem; letter-spacing: -0.03em; transform: rotateZ(42deg); }
+  .lyr__plane:nth-child(1) { background: var(--blue); color: #fff; border-color: var(--blue); }
+  .lyr__plane.on { background: var(--ink); color: #fff; border-color: var(--ink); transform: translateZ(calc(var(--i) * var(--gap) + 40px)); }
+  .lyr__list { list-style: none; padding: 0; border-top: 1px solid var(--ink); }
+  .lyr__list li { display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--line); cursor: default; outline: none; transition: padding 0.4s var(--ease); }
+  .lyr__list li.on, .lyr__list li:focus-visible { padding-inline-start: 10px; }
+  .lyr__list li.on strong { color: var(--blue); }
+  .lyr__list strong { font-family: var(--f-display); font-size: 1.1rem; font-weight: 500; }
+  .lyr__list p { font-size: 0.92rem; margin-top: 2px; }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-lyr]').forEach((root) => {
+    const planes = root.querySelectorAll<HTMLElement>('[data-lyr-plane]');
+    const items = root.querySelectorAll<HTMLElement>('[data-lyr-item]');
+    const set = (i: number | null) => {
+      planes.forEach((p) => p.classList.toggle('on', i !== null && p.dataset.lyrPlane === String(i)));
+      items.forEach((it) => it.classList.toggle('on', i !== null && it.dataset.lyrItem === String(i)));
+    };
+    items.forEach((it) => {
+      const i = Number(it.dataset.lyrItem);
+      it.addEventListener('pointerenter', () => set(i));
+      it.addEventListener('focus', () => set(i));
+    });
+    root.addEventListener('pointerleave', () => set(null));
+  });
+</script>

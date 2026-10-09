@@ -1,0 +1,155 @@
+---
+// Study: product configurator for an industrial part (idea credited to Teatika on the Lab page).
+// Pure CSS 3D + vanilla JS. Drag to rotate; options rebuild the part code and the quote link.
+import type { Lang } from '../../lib/url';
+import { waLink } from '../../config/site';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const ar = lang === 'ar';
+const T = {
+  housing: ar ? 'الغلاف' : 'Housing',
+  conn: ar ? 'التوصيل' : 'Connection',
+  mount: ar ? 'التثبيت' : 'Mounting',
+  code: ar ? 'كود القطعة' : 'Part code',
+  drag: ar ? 'اسحب للتدوير' : 'Drag to rotate',
+  quote: ar ? 'اطلب عرض سعر بهذا التكوين' : 'Request a quote for this build',
+  colors: [
+    { id: 'GR', label: ar ? 'رمادي' : 'Gray', hex: '#9aa3b2' },
+    { id: 'BL', label: ar ? 'أزرق' : 'Blue', hex: '#2a5bff' },
+    { id: 'BK', label: ar ? 'أسود' : 'Black', hex: '#1b2638' },
+  ],
+  conns: [
+    { id: 'M12', label: ar ? 'موصّل M12' : 'M12 connector' },
+    { id: 'C2', label: ar ? 'كابل 2 م' : '2 m cable' },
+  ],
+  mounts: [
+    { id: 'BR', label: ar ? 'حامل' : 'Bracket' },
+    { id: 'NO', label: ar ? 'بدون' : 'None' },
+  ],
+};
+const quoteBase = waLink('').replace(/\?.*$/, '');
+---
+<div class="cfg" data-cfg data-quote={quoteBase} data-quote-text={ar ? 'مرحبًا، أريد عرض سعر لـ' : 'Hi, I need a quote for'}>
+  <div class="cfg__stage" data-cfg-stage data-cursor={T.drag}>
+    <div class="cfg__obj" data-cfg-obj style="--c:#9aa3b2">
+      <div class="cfg__box">
+        <i class="f front"><span class="lens"></span><span class="led"></span><span class="tag">SDK·PE</span></i>
+        <i class="f back"></i><i class="f left"></i><i class="f right"></i><i class="f top"></i><i class="f bottom"></i>
+      </div>
+      <div class="cfg__conn" data-cfg-conn></div>
+      <div class="cfg__cable" data-cfg-cable hidden></div>
+      <div class="cfg__bracket" data-cfg-bracket></div>
+    </div>
+    <span class="cfg__hint caps">↻ {T.drag}</span>
+  </div>
+
+  <div class="cfg__panel">
+    <fieldset>
+      <legend class="caps">{T.housing}</legend>
+      <div class="cfg__opts">
+        {T.colors.map((c, i) => (
+          <label class="cfg__swatch"><input type="radio" name="housing" value={c.id} data-hex={c.hex} checked={i === 0} /><span style={`--sw:${c.hex}`}></span>{c.label}</label>
+        ))}
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend class="caps">{T.conn}</legend>
+      <div class="cfg__opts">
+        {T.conns.map((c, i) => <label class="cfg__chip"><input type="radio" name="conn" value={c.id} checked={i === 0} /><span>{c.label}</span></label>)}
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend class="caps">{T.mount}</legend>
+      <div class="cfg__opts">
+        {T.mounts.map((c, i) => <label class="cfg__chip"><input type="radio" name="mount" value={c.id} checked={i === 0} /><span>{c.label}</span></label>)}
+      </div>
+    </fieldset>
+    <div class="cfg__code">
+      <span class="caps muted">{T.code}</span>
+      <output class="cfg__code-val" data-cfg-code dir="ltr">SDK-PE-GR-M12-BR</output>
+    </div>
+    <a class="btn btn--blue" data-cfg-quote href={quoteBase} target="_blank" rel="noopener">{T.quote}</a>
+  </div>
+</div>
+
+<style>
+  .cfg { display: grid; gap: 28px; }
+  @media (min-width: 900px) { .cfg { grid-template-columns: 1.3fr 1fr; align-items: stretch; } }
+  .cfg__stage { position: relative; min-height: 380px; border-radius: 14px; background: radial-gradient(circle at 50% 40%, #fff, var(--surface-2)); border: 1px solid var(--line); display: grid; place-items: center; perspective: 900px; touch-action: none; user-select: none; overflow: hidden; }
+  .cfg__hint { position: absolute; bottom: 14px; inset-inline-start: 16px; color: var(--muted); }
+  .cfg__obj { --rx: -18deg; --ry: 32deg; position: relative; width: 180px; height: 120px; transform-style: preserve-3d; transform: rotateX(var(--rx)) rotateY(var(--ry)); }
+  .cfg__box { position: absolute; inset: 0; transform-style: preserve-3d; }
+  .f { position: absolute; display: block; background: var(--c); border: 1px solid rgb(0 0 0 / 0.08); transition: background 0.5s var(--ease); }
+  .front, .back { width: 180px; height: 120px; }
+  .left, .right { width: 80px; height: 120px; left: 50px; }
+  .top, .bottom { width: 180px; height: 80px; top: 20px; }
+  .front { transform: translateZ(40px); display: flex; align-items: center; gap: 18px; padding: 0 22px; }
+  .back { transform: rotateY(180deg) translateZ(40px); filter: brightness(0.75); }
+  .right { transform: rotateY(90deg) translateZ(90px); filter: brightness(0.85); }
+  .left { transform: rotateY(-90deg) translateZ(90px); filter: brightness(0.85); }
+  .top { transform: rotateX(90deg) translateZ(60px); filter: brightness(1.12); }
+  .bottom { transform: rotateX(-90deg) translateZ(60px); filter: brightness(0.6); }
+  .lens { width: 56px; height: 56px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #9fd0ff, #0a2a8f 65%, #050b18); box-shadow: inset 0 0 0 5px rgb(255 255 255 / 0.25); flex: none; }
+  .led { width: 9px; height: 9px; border-radius: 50%; background: #12b76a; box-shadow: 0 0 10px #12b76a; animation: blink 1.6s infinite; }
+  @keyframes blink { 50% { opacity: 0.3; } }
+  .tag { margin-inline-start: auto; font: 600 0.7rem var(--f-mono); color: #fff; letter-spacing: 0.08em; opacity: 0.85; }
+  .cfg__conn { position: absolute; width: 34px; height: 34px; left: 73px; top: 43px; transform: translateZ(-41px); border-radius: 50%; background: repeating-linear-gradient(90deg, #c9ced8 0 3px, #8b93a3 3px 6px); }
+  .cfg__cable { position: absolute; width: 14px; height: 160px; left: 83px; top: 60px; transform: translateZ(-40px) rotateX(70deg); transform-origin: top; border-radius: 7px; background: linear-gradient(90deg, #111, #333, #111); }
+  .cfg__bracket { position: absolute; width: 210px; height: 12px; left: -15px; top: 122px; background: linear-gradient(#cfd5de, #8e97a6); transform: translateZ(0) rotateX(90deg); border-radius: 2px; transition: opacity 0.4s; }
+  .cfg__bracket[hidden] { display: block; opacity: 0; }
+  .cfg__panel { display: grid; gap: 22px; align-content: start; padding: 26px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+  fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: 10px; }
+  legend { margin-bottom: 10px; color: var(--muted); }
+  .cfg__opts { display: flex; flex-wrap: wrap; gap: 8px; }
+  .cfg__opts input { position: absolute; opacity: 0; pointer-events: none; }
+  .cfg__swatch, .cfg__chip { position: relative; display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px; font-size: 0.9rem; cursor: pointer; transition: border-color 0.25s, background 0.25s, color 0.25s; }
+  .cfg__swatch span { width: 16px; height: 16px; border-radius: 50%; background: var(--sw); box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.15); }
+  .cfg__swatch:has(input:checked), .cfg__chip:has(input:checked) { border-color: var(--blue); background: var(--blue-soft); color: var(--blue-deep); }
+  .cfg__opts label:has(input:focus-visible) { outline: 2px solid var(--blue); outline-offset: 2px; }
+  .cfg__code { display: grid; gap: 4px; padding-top: 18px; border-top: 1px solid var(--line); }
+  .cfg__code-val { font-family: var(--f-mono); font-size: 1.3rem; color: var(--blue); }
+  .cfg .btn { justify-self: start; }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-cfg]').forEach((root) => {
+    const obj = root.querySelector<HTMLElement>('[data-cfg-obj]')!;
+    const stage = root.querySelector<HTMLElement>('[data-cfg-stage]')!;
+    const code = root.querySelector<HTMLOutputElement>('[data-cfg-code]')!;
+    const quote = root.querySelector<HTMLAnchorElement>('[data-cfg-quote]')!;
+    const conn = root.querySelector<HTMLElement>('[data-cfg-conn]')!;
+    const cable = root.querySelector<HTMLElement>('[data-cfg-cable]')!;
+    const bracket = root.querySelector<HTMLElement>('[data-cfg-bracket]')!;
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let rx = -18, ry = 32, dragging = false, lx = 0, ly = 0, idle = true;
+
+    const update = () => {
+      const v = (n: string) => (root.querySelector<HTMLInputElement>(`input[name="${n}"]:checked`)!);
+      const h = v('housing'), c = v('conn'), m = v('mount');
+      obj.style.setProperty('--c', h.dataset.hex!);
+      conn.hidden = c.value !== 'M12';
+      cable.hidden = c.value === 'M12';
+      bracket.hidden = m.value !== 'BR';
+      const part = `SDK-PE-${h.value}-${c.value}-${m.value}`;
+      code.value = part;
+      quote.href = `${root.dataset.quote}?text=${encodeURIComponent(`${root.dataset.quoteText} ${part}`)}`;
+    };
+    root.addEventListener('change', update);
+    update();
+
+    const apply = () => { obj.style.setProperty('--rx', `${rx}deg`); obj.style.setProperty('--ry', `${ry}deg`); };
+    stage.addEventListener('pointerdown', (e) => { dragging = true; idle = false; lx = e.clientX; ly = e.clientY; stage.setPointerCapture(e.pointerId); });
+    stage.addEventListener('pointermove', (e) => {
+      if (!dragging) return;
+      ry += (e.clientX - lx) * 0.5; rx = Math.max(-60, Math.min(40, rx - (e.clientY - ly) * 0.4));
+      lx = e.clientX; ly = e.clientY; apply();
+    });
+    const end = () => { dragging = false; setTimeout(() => (idle = true), 2500); };
+    stage.addEventListener('pointerup', end);
+    stage.addEventListener('pointercancel', end);
+    if (!reduce) {
+      const spin = () => { if (idle && !dragging) { ry += 0.25; apply(); } requestAnimationFrame(spin); };
+      spin();
+    }
+  });
+</script>
