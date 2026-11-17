@@ -131,4 +131,19 @@ export const services: Service[] = [
     },
     projects: ['alsakr-analytics', 'ops-monitor'],
   },
+  {
+    id: 'film',
+    n: '09',
+    icon: '<rect x="3" y="5" width="14" height="14" rx="2"/><path d="m17 10 4-2v8l-4-2M7 9v6M11 9v6"/>',
+    title: { en: 'AI Film, Video & 3D', ar: 'أفلام وفيديو و3D بالذكاء الاصطناعي' },
+    short: {
+      en: 'Story-first AI films, microdramas and product turntables — written, directed and kept consistent shot to shot.',
+      ar: 'أفلام ودراما قصيرة بالذكاء الاصطناعي وعروض منتجات دوّارة — بكتابة وإخراج واستمرارية من لقطة إلى لقطة.',
+    },
+    deliverables: {
+      en: ['Series bible & screenplay', 'Character & location boards', 'Keyframe and clip prompts', 'Continuity QA', '3D CAD turntables'],
+      ar: ['دليل المسلسل والسيناريو', 'لوحات الشخصيات والمواقع', 'أوامر الإطارات والمقاطع', 'مراجعة الاستمرارية', 'عروض CAD دوّارة'],
+    },
+    projects: ['chisel-and-stone', 'dead-line', 'production-factory', 'cad-turntables'],
+  },
 ];

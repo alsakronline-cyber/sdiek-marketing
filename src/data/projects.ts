@@ -1,6 +1,6 @@
 import type { Bi } from '../i18n';
 
-export type Category = 'web' | 'system' | 'automation' | 'lab';
+export type Category = 'web' | 'system' | 'automation' | 'media' | 'strategy' | 'lab';
 
 export interface Project {
   slug: string;
@@ -707,8 +707,279 @@ export const projects: Project[] = [
       ar: ['موضوع', 'سيناريو', 'مشاهد', 'صوت + ترجمة', 'موافقة', 'نشر'],
     },
   },
+
+  // ───────────────────────────── FILM & 3D ─────────────────────────────
+  {
+    slug: 'chisel-and-stone',
+    category: 'media',
+    featured: true,
+    title: 'The Chisel and the Stone',
+    client: { en: 'Original AI historical drama', ar: 'دراما تاريخية أصلية بالذكاء الاصطناعي' },
+    year: '2026',
+    status: { en: 'In pre-production', ar: 'قيد التحضير' },
+    tagline: {
+      en: 'Ancient Egypt as a living drama: 8 seasons, 26 episodes, every scene traced to a page of the source.',
+      ar: 'مصر القديمة كدراما حيّة: 8 مواسم و26 حلقة، وكل مشهد مرتبط بصفحة في المصدر.',
+    },
+    summary: {
+      en: 'A series bible built from Breasted’s A History of Egypt (1905): festivals, work, food and conflict, with no narrator, only the people of each era talking.',
+      ar: 'دليل مسلسل مبني على كتاب بريستد «تاريخ مصر» (1905): أعياد وعمل وطعام وصراعات، بلا راوٍ، فقط أهل كل عصر يتحدّثون.',
+    },
+    challenge: {
+      en: 'Make history feel lived-in on screen without inventing a single event, relationship or outcome the source does not support.',
+      ar: 'أن يبدو التاريخ معاشًا على الشاشة دون اختلاق حدث أو علاقة أو نتيجة لا يدعمها المصدر.',
+    },
+    solution: {
+      en: 'A three-tier dialogue rule (verbatim, rendered, ambient), a source ledger per episode with page numbers, a living-world layer of documented festivals and customs, and seven-beat episode outlines, including a fully worked Megiddo episode.',
+      ar: 'قاعدة حوار من ثلاث درجات (حرفي، مُعاد صياغته، خلفي)، وسجلّ مصادر لكل حلقة بأرقام الصفحات، وطبقة حياة يومية من الأعياد والعادات الموثّقة، وهيكل من سبع لحظات لكل حلقة، منها حلقة «مجدو» مكتملة.',
+    },
+    outcome: {
+      en: 'Series bible and season plan complete. The companion series “Names Left on the Wall” has its Episode 1 screenplay and production package written.',
+      ar: 'دليل المسلسل وخطة المواسم مكتملان، والمسلسل المصاحب «أسماء على الجدار» كُتب له سيناريو الحلقة الأولى وحزمة الإنتاج.',
+    },
+    features: {
+      en: ['8 seasons · 26 episodes', 'Three-tier dialogue rule', 'Page-referenced source ledger', 'Seven-beat episode structure', 'Language & sound bible'],
+      ar: ['8 مواسم · 26 حلقة', 'قاعدة حوار من ثلاث درجات', 'سجلّ مصادر بأرقام الصفحات', 'هيكل حلقة من سبع لحظات', 'دليل اللغة والصوت'],
+    },
+    stack: ['Claude', 'Screenwriting', 'AI video', 'Research'],
+    role: { en: 'Showrunner, writer, research', ar: 'صانع المسلسل والكاتب والباحث' },
+    flow: {
+      en: ['Source text', 'Verified events', 'Living world', 'Seven beats', 'Screenplay', 'Shots'],
+      ar: ['النص المصدر', 'أحداث موثّقة', 'الحياة اليومية', 'سبع لحظات', 'سيناريو', 'لقطات'],
+    },
+  },
+  {
+    slug: 'dead-line',
+    category: 'media',
+    title: 'Dead Line',
+    client: { en: 'Original AI microdrama', ar: 'دراما قصيرة أصلية بالذكاء الاصطناعي' },
+    year: '2026',
+    status: { en: 'Pilot test', ar: 'اختبار تجريبي' },
+    tagline: {
+      en: 'A five-episode vertical mystery: a night dispatcher gets a call from her missing sister’s number.',
+      ar: 'غموض عمودي من خمس حلقات: موظفة طوارئ ليلية تتلقّى مكالمة من رقم أختها المفقودة.',
+    },
+    summary: {
+      en: 'A story-first test of whether an AI-produced microdrama can hold viewers from episode 1 to 5 on an $80–130 generation budget.',
+      ar: 'اختبار يضع القصة أولًا: هل تحتفظ دراما قصيرة مصنوعة بالذكاء الاصطناعي بالمشاهد من الحلقة 1 إلى 5 بميزانية توليد 80–130 دولارًا؟',
+    },
+    challenge: {
+      en: 'Keep four characters looking and sounding the same across 40 shots, and read as original under platform rules on generic AI content.',
+      ar: 'الحفاظ على شكل وصوت أربع شخصيات ثابتين عبر 40 لقطة، وأن يُقرأ العمل كأصلي وفق قواعد المنصّات حول المحتوى المولّد العام.',
+    },
+    solution: {
+      en: 'A four-person cast with locked reference looks, five locations, night interiors that hide AI artefacts, eight ~8-second shots per episode, a policy checklist and pass/fail retention metrics set before launch.',
+      ar: 'طاقم من أربع شخصيات بمظهر مرجعي ثابت، وخمسة مواقع، ومشاهد ليلية داخلية تخفي عيوب الذكاء الاصطناعي، وثماني لقطات من نحو 8 ثوانٍ لكل حلقة، وقائمة تحقّق للسياسات، ومقاييس نجاح محدّدة قبل الإطلاق.',
+    },
+    outcome: {
+      en: 'Bible, scripts, cost model and test plan written; production runs through the Production Factory pipeline.',
+      ar: 'الدليل والسيناريوهات ونموذج التكلفة وخطة الاختبار مكتملة، والإنتاج يمرّ عبر خط «مصنع الإنتاج».',
+    },
+    features: {
+      en: ['5 episodes × ~70 s, 9:16', 'Locked character references', 'Cliffhanger every episode', 'Cost model per attempt', 'Retention pass lines'],
+      ar: ['5 حلقات × نحو 70 ثانية، 9:16', 'مراجع شخصيات ثابتة', 'نهاية مشوّقة لكل حلقة', 'نموذج تكلفة لكل محاولة', 'معايير نجاح للاحتفاظ'],
+    },
+    stack: ['Veo', 'Seedance', 'TTS', 'CapCut', 'YouTube Shorts'],
+    role: { en: 'Writer, director, producer', ar: 'الكاتب والمخرج والمنتج' },
+    flow: {
+      en: ['Premise', 'Bible', 'Shot list', 'Generate', 'QA', 'Publish + measure'],
+      ar: ['الفكرة', 'الدليل', 'قائمة اللقطات', 'توليد', 'مراجعة', 'نشر وقياس'],
+    },
+  },
+  {
+    slug: 'production-factory',
+    category: 'media',
+    title: 'Production Factory',
+    client: { en: 'Own tool', ar: 'أداة خاصة' },
+    year: '2026',
+    status: { en: 'In use', ar: 'قيد الاستخدام' },
+    tagline: {
+      en: 'Pick options across nine phases and get one master prompt that runs a whole virtual film crew.',
+      ar: 'اختر من تسع مراحل لتحصل على أمر رئيسي واحد يدير طاقم تصوير افتراضي كاملًا.',
+    },
+    summary: {
+      en: 'An interactive workbench that turns choices (format, genre, camera, light, keyframes, QA) into a gated, phase-by-phase AI production brief.',
+      ar: 'منصة تفاعلية تحوّل الاختيارات (الصيغة والنوع والكاميرا والإضاءة والإطارات المفتاحية والمراجعة) إلى خطة إنتاج بالذكاء الاصطناعي مرحلة بمرحلة مع بوابات موافقة.',
+    },
+    challenge: {
+      en: 'AI films break on continuity: faces drift, light flips, props vanish. The rules that prevent it are easy to forget on shot 87.',
+      ar: 'أفلام الذكاء الاصطناعي تنهار عند الاستمرارية: تتغيّر الوجوه، وتنقلب الإضاءة، وتختفي الأدوات. والقواعد التي تمنع ذلك تُنسى بسهولة عند اللقطة 87.',
+    },
+    solution: {
+      en: 'Nine phases from setup to package, five human approval gates, @-tagged asset boards, first and last keyframes, one action per clip and a per-clip QA checklist, all compiled into one prompt.',
+      ar: 'تسع مراحل من الإعداد حتى التسليم، وخمس بوابات موافقة بشرية، ولوحات أصول بوسوم @، وإطارات أولى وأخيرة، وحركة واحدة لكل مقطع، وقائمة مراجعة لكل مقطع، كلها في أمر واحد.',
+    },
+    outcome: {
+      en: 'The pipeline behind Dead Line and the historical series.',
+      ar: 'خط الإنتاج وراء «Dead Line» والمسلسل التاريخي.',
+    },
+    features: {
+      en: ['9 phases, 5 approval gates', 'Asset boards with @ tags', 'Keyframe handoffs', 'Continuity QA', 'Copy-ready master prompt'],
+      ar: ['9 مراحل و5 بوابات موافقة', 'لوحات أصول بوسوم @', 'تسليم بين الإطارات', 'مراجعة الاستمرارية', 'أمر رئيسي جاهز للنسخ'],
+    },
+    stack: ['Vanilla JS', 'Claude', 'Prompt engineering'],
+    role: { en: 'Design & build', ar: 'التصميم والبناء' },
+    flow: {
+      en: ['Setup', 'Story', 'Crew sheets', 'Keyframes', 'Clips', 'QA + package'],
+      ar: ['الإعداد', 'القصة', 'أوراق الطاقم', 'إطارات', 'مقاطع', 'مراجعة وتسليم'],
+    },
+  },
+  {
+    slug: 'cad-turntables',
+    category: 'media',
+    title: '3D CAD Turntables',
+    client: { en: 'Industrial product renders', ar: 'عروض منتجات صناعية' },
+    year: '2026',
+    status: { en: 'Built', ar: 'مكتمل' },
+    tagline: {
+      en: 'Real CAD assemblies, studio-lit and rotating in the browser, with no render farm.',
+      ar: 'تجميعات CAD حقيقية بإضاءة استوديو تدور داخل المتصفح، بدون مزرعة رندر.',
+    },
+    summary: {
+      en: 'Onshape CAD exported to glTF and shown as a 15-second orbiting turntable with live dimensions, for design review and product pages.',
+      ar: 'ملفات Onshape تُصدَّر إلى glTF وتُعرض كدوران مدته 15 ثانية مع أبعاد حيّة، لمراجعة التصميم وصفحات المنتجات.',
+    },
+    challenge: {
+      en: 'Industrial buyers want to see the part from every side, but video renders are slow to make and heavy to load.',
+      ar: 'المشتري الصناعي يريد رؤية القطعة من كل الجهات، لكن فيديوهات الرندر بطيئة الإنتاج وثقيلة التحميل.',
+    },
+    solution: {
+      en: 'A Three.js viewer with three-point studio lighting, a camera orbit with gentle parallax, pause control and reduced-motion support, loading native geometry straight from the CAD model.',
+      ar: 'عارض Three.js بإضاءة استوديو ثلاثية، ودوران كاميرا مع حركة خفيفة، وزر إيقاف، ودعم تقليل الحركة، يحمّل الشكل الأصلي مباشرة من نموذج CAD.',
+    },
+    outcome: {
+      en: 'Turntables for a CMC-Corn assembly and a conveyor drive unit, reusable for any CAD part.',
+      ar: 'عروض دوّارة لتجميعة CMC-Corn ووحدة إدارة سير ناقل، قابلة لإعادة الاستخدام مع أي قطعة CAD.',
+    },
+    features: {
+      en: ['Native CAD geometry', 'Studio three-point light', 'Live dimensions', 'Reduced-motion safe', 'Light & dark themes'],
+      ar: ['شكل CAD أصلي', 'إضاءة استوديو ثلاثية', 'أبعاد حيّة', 'آمن لتقليل الحركة', 'وضع فاتح وداكن'],
+    },
+    stack: ['Onshape', 'glTF', 'Three.js', 'WebGL'],
+    role: { en: '3D pipeline & build', ar: 'خط الـ 3D والبناء' },
+    flow: {
+      en: ['Onshape CAD', 'glTF export', 'Three.js scene', 'Studio light', 'Turntable'],
+      ar: ['Onshape CAD', 'تصدير glTF', 'مشهد Three.js', 'إضاءة استوديو', 'عرض دوّار'],
+    },
+  },
+
+  // ───────────────────────────── STRATEGY ─────────────────────────────
+  {
+    slug: 'alsakr-social-playbook',
+    category: 'strategy',
+    title: 'Al Sakr Social Playbook',
+    client: { en: 'ALSAKR Trading & Manufacturing', ar: 'الصقر للتجارة والصناعة' },
+    year: '2026',
+    status: { en: 'Delivered', ar: 'تم التسليم' },
+    tagline: {
+      en: 'A social audit, competitor scan and 90-day plan for a packaging-line manufacturer founded in 1995.',
+      ar: 'تدقيق للسوشيال ومسح للمنافسين وخطة 90 يومًا لمصنع خطوط تعبئة تأسس عام 1995.',
+    },
+    summary: {
+      en: 'Built from Meta Business Suite insights and ad results: where leads are lost, which formats work, and 20 ways to win leads without ads.',
+      ar: 'مبني على بيانات Meta Business Suite ونتائج الإعلانات: أين تضيع العملاء، وأي صيغ تنجح، و20 طريقة لكسب العملاء بدون إعلانات.',
+    },
+    challenge: {
+      en: 'Paid ads produced WhatsApp chats cheaply, but most messages went unanswered and the page went silent between campaigns.',
+      ar: 'الإعلانات كانت تجلب محادثات واتساب بتكلفة منخفضة، لكن معظم الرسائل بلا رد، والصفحة تصمت بين الحملات.',
+    },
+    solution: {
+      en: 'A SWOT, five content pillars led by machines-in-action Reels and customer proof, channel roles, a month-by-month calendar, a measurement loop and a 7-day fix list that starts with the inbox.',
+      ar: 'تحليل SWOT، وخمسة محاور محتوى تتصدّرها ريلز الماكينات أثناء العمل وإثبات العملاء، وأدوار القنوات، وتقويم شهري، ودورة قياس، وقائمة إصلاح لسبعة أيام تبدأ بصندوق الرسائل.',
+    },
+    outcome: {
+      en: 'Playbook delivered with 90-day targets for response rate, posting cadence and cost per chat.',
+      ar: 'تم تسليم الدليل بأهداف 90 يومًا لمعدّل الرد وإيقاع النشر وتكلفة المحادثة.',
+    },
+    features: {
+      en: ['Ads + organic audit', 'Competitor landscape', 'SWOT', '3-month calendar', '20 no-ad lead ideas'],
+      ar: ['تدقيق المدفوع والمجاني', 'خريطة المنافسين', 'SWOT', 'تقويم 3 أشهر', '20 فكرة عملاء بلا إعلانات'],
+    },
+    stack: ['Meta Business Suite', 'Ads Manager', 'LinkedIn', 'Research'],
+    role: { en: 'Audit & strategy', ar: 'التدقيق والاستراتيجية' },
+    flow: {
+      en: ['Insights', 'Audit', 'Competitors', 'Strategy', 'Calendar', 'Monthly review'],
+      ar: ['البيانات', 'التدقيق', 'المنافسون', 'الاستراتيجية', 'التقويم', 'مراجعة شهرية'],
+    },
+  },
+  {
+    slug: 'nexumotion-growth-plan',
+    category: 'strategy',
+    title: 'NexuMotion Organic Growth Plan',
+    client: { en: 'NexuMotion', ar: 'نيكسو موشن' },
+    year: '2026',
+    status: { en: 'Delivered', ar: 'تم التسليم' },
+    tagline: {
+      en: 'Zero-spend growth: a plan to double B2B leads in 90 days with WhatsApp, Google Business, Arabic SEO and human-approved automation.',
+      ar: 'نمو بلا إنفاق: خطة لمضاعفة العملاء في 90 يومًا عبر واتساب وجوجل بيزنس والسيو العربي وأتمتة بموافقة بشرية.',
+    },
+    summary: {
+      en: 'Channels ranked by leads per hour, five content pillars, a 90-day calendar, SEO/GEO tactics and five free n8n workflows.',
+      ar: 'قنوات مرتّبة حسب العملاء لكل ساعة، وخمسة محاور محتوى، وتقويم 90 يومًا، وتكتيكات سيو وGEO، وخمسة مسارات n8n مجانية.',
+    },
+    challenge: {
+      en: 'Grow a new industrial-parts brand against established local rivals with no ad budget and one part-time marketer.',
+      ar: 'تنمية علامة قطع غيار صناعية جديدة أمام منافسين محليين راسخين، بلا ميزانية إعلانية ومسوّق واحد بدوام جزئي.',
+    },
+    solution: {
+      en: 'Positioning on speed and Arabic engineering help (send a part number, get a datasheet and a written quote in 24 hours), cross-reference pages, and automations for post drafts, lead capture, follow-ups, reorders and reviews. Nothing posts without approval.',
+      ar: 'تموضع على السرعة والدعم الهندسي بالعربية (ابعت رقم القطعة وخد داتاشيت وعرض سعر مكتوب خلال 24 ساعة)، وصفحات بدائل القطع، وأتمتة لمسودات المنشورات والتقاط العملاء والمتابعة وإعادة الطلب والتقييمات. ولا شيء يُنشر دون موافقة.',
+    },
+    outcome: {
+      en: 'Plan delivered with 3- and 6-month KPI targets and a free tracking stack.',
+      ar: 'تم تسليم الخطة بمؤشرات أداء لثلاثة وستة أشهر ومنظومة تتبّع مجانية.',
+    },
+    features: {
+      en: ['EGP 0 budget', 'Channel ranking', 'Arabic SEO + GEO', '5 n8n workflows', 'KPI dashboard'],
+      ar: ['ميزانية صفر', 'ترتيب القنوات', 'سيو عربي + GEO', '5 مسارات n8n', 'لوحة مؤشرات'],
+    },
+    stack: ['n8n', 'Google Business Profile', 'WhatsApp Business', 'Search Console', 'Looker Studio'],
+    role: { en: 'Growth strategy & automation design', ar: 'استراتيجية النمو وتصميم الأتمتة' },
+    flow: {
+      en: ['New part', 'AI draft', 'Human approve', 'Post', 'Lead sheet', 'Follow-up'],
+      ar: ['قطعة جديدة', 'مسودة ذكاء اصطناعي', 'موافقة بشرية', 'نشر', 'جدول العملاء', 'متابعة'],
+    },
+  },
+  {
+    slug: 'effat-growth-canvas',
+    category: 'strategy',
+    title: 'Effat Group Growth Canvas',
+    client: { en: 'Effat Group — fire, alarm, security, PPE', ar: 'مجموعة عفت — حريق وإنذار وأمن وسلامة' },
+    year: '2026',
+    status: { en: 'Delivered', ar: 'تم التسليم' },
+    tagline: {
+      en: 'Selling compliance, not extinguishers: a bilingual business model built around the annual inspection cycle.',
+      ar: 'نبيع امتثالًا لا طفايات: نموذج عمل بلغتين مبني حول دورة الفحص السنوية.',
+    },
+    summary: {
+      en: 'Business Model Canvas, brand platform, per-segment messaging, a four-phase go-to-market and six numbers to run the business by, in Arabic and English.',
+      ar: 'مخطط نموذج العمل، ومنصة الهوية، ورسائل لكل شريحة، وخطة دخول للسوق من أربع مراحل، وستة أرقام لإدارة الشركة، بالعربية والإنجليزية.',
+    },
+    challenge: {
+      en: 'Competitors sell equipment once and disappear; nobody had claimed the recurring refill and inspection work online.',
+      ar: 'المنافسون يبيعون المعدات مرة ويختفون، ولم يتبنَّ أحد أعمال إعادة التعبئة والفحص المتكررة على الإنترنت.',
+    },
+    solution: {
+      en: 'Reframe every equipment sale as the start of a maintenance contract: an install-base register with due dates, 11-month WhatsApp reminders, published prices and sector bundles.',
+      ar: 'تحويل كل بيعة معدات إلى بداية عقد صيانة: سجلّ للأجهزة بمواعيدها، وتذكير واتساب في الشهر الحادي عشر، وأسعار معلنة، وحزم لكل قطاع.',
+    },
+    outcome: {
+      en: 'Strategy delivered alongside the Effat commerce platform build.',
+      ar: 'تم تسليم الاستراتيجية بالتوازي مع بناء منصة عفت التجارية.',
+    },
+    features: {
+      en: ['Business Model Canvas', 'Brand platform', 'Message architecture', 'Go-to-market phases', 'Six KPIs'],
+      ar: ['مخطط نموذج العمل', 'منصة الهوية', 'هيكل الرسائل', 'مراحل دخول السوق', 'ستة مؤشرات'],
+    },
+    stack: ['Strategy', 'Branding', 'Bilingual copy'],
+    role: { en: 'Strategy & brand', ar: 'الاستراتيجية والهوية' },
+    flow: {
+      en: ['Sale', 'Register', 'Reminder at 11 mo', 'Refill / inspect', 'Contract'],
+      ar: ['بيع', 'تسجيل', 'تذكير في الشهر 11', 'تعبئة / فحص', 'عقد'],
+    },
+  },
 ];
 
-export const categories: Category[] = ['web', 'system', 'automation', 'lab'];
+export const categories: Category[] = ['web', 'system', 'automation', 'media', 'strategy', 'lab'];
 export const featuredProjects = projects.filter((p) => p.featured);
 export const getProject = (slug: string) => projects.find((p) => p.slug === slug);

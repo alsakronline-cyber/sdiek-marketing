@@ -8,3 +8,7 @@ dist/
 *.pem
 *.pub
 .DS_Store
+.vercel
+
+.vercel
+.env*

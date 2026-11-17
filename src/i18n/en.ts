@@ -81,7 +81,7 @@ export const en = {
     manifestoSub:
       'Site, SEO, content, ads, data and automation — wired together, in Arabic and English, owned by you.',
     servicesTitle: 'What I build',
-    servicesLead: 'Eight capabilities, one connected system.',
+    servicesLead: 'Nine capabilities, one connected system.',
     workTitle: 'Selected work',
     workLead: 'Real sites. Real systems. Hover to preview, click for the story.',
     processTitle: 'How a project runs',
@@ -107,7 +107,7 @@ export const en = {
   work: {
     title: 'Work',
     lead: 'Websites, systems and automations — each one built from scratch, most of them running right now.',
-    filters: { all: 'All', web: 'Websites', system: 'Systems', automation: 'Automations', lab: 'R&D' },
+    filters: { all: 'All', web: 'Websites', system: 'Systems', automation: 'Automations', media: 'Film & 3D', strategy: 'Strategy', lab: 'R&D' },
     challenge: 'The challenge',
     solution: 'What I built',
     outcome: 'Outcome',

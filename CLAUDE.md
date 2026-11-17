@@ -3,7 +3,7 @@
 Personal-brand + studio site for **Sdiek Marketing**, founded by **Mohamed Ramadan**.
 Bilingual (English LTR / Arabic RTL), built with **Astro**, light gray + blue, motion-heavy.
 
-> Status: **v1 built** (2026-10-07). Open items live in [`docs/MISSING.md`](docs/MISSING.md) — check it before shipping.
+> Status: **v1 built** (2026-10-07). **v1.1** (2026-11-17): added Film & 3D and Strategy work, service 09, Vercel deploy. Open items live in [`docs/MISSING.md`](docs/MISSING.md) — check it before shipping.
 
 ---
 
@@ -74,13 +74,14 @@ Started from the meermohsin.me structure; v2 removed visual noise after feedback
 6. **Advertising** — Meta / Google ads, tracking, landing pages, reporting.
 7. **Branding** — identity, positioning, messaging.
 8. **Analytics & Dashboards** — sales/ads/ops data in one view.
+9. **AI Film, Video & 3D** — series bibles, screenplays, AI microdramas, continuity-safe prompt pipelines, CAD turntables.
 
 Offer: **free 30-min consultation** → proposal. No public pricing.
 
 ---
 
 ## 3. Portfolio
-Single source: `src/data/projects.ts` (bilingual). Categories: `web`, `system`, `automation`, `lab`.
+Single source: `src/data/projects.ts` (bilingual). Categories: `web`, `system`, `automation`, `media` (Film & 3D), `strategy`, `lab`. Filter labels live in `src/i18n/*.ts → work.filters`.
 Screenshots of live sites: `npm run shots` (puppeteer-core + local Chrome) → `public/work/*.webp`.
 Non-web systems are illustrated by the animated **FlowDiagram** component built from each project's `flow` array — never with fake UI screenshots.
 
@@ -103,6 +104,15 @@ Non-web systems are illustrated by the animated **FlowDiagram** component built 
 | ai-sales-widget | AI sales assistant widget | automation | live on alsakronline.com |
 | jarvis | Jarvis — voice AI ops assistant | lab | personal |
 | video-factory | Automated video factory | lab | R&D |
+| chisel-and-stone | The Chisel and the Stone — AI historical drama (+ Names Left on the Wall) | media | pre-production |
+| dead-line | Dead Line — 5-ep AI microdrama test | media | pilot |
+| production-factory | Production Factory — 9-phase AI film prompt builder | media | own tool |
+| cad-turntables | 3D CAD turntables (Three.js) | media | built |
+| alsakr-social-playbook | Al Sakr social audit + 90-day plan | strategy | delivered |
+| nexumotion-growth-plan | NexuMotion zero-spend growth plan | strategy | delivered |
+| effat-growth-canvas | Effat Group business model + brand | strategy | delivered |
+
+Source material for media/strategy entries lives in the owner's claude.ai artifacts (not in this repo). Numbers in those entries come from those docs only.
 
 **Lab page** (`/lab/`): (1) coded concept studies in `src/components/studies/` — our own code, each labelled "Concept study — not a client project" and crediting the site that inspired the idea; (2) inspiration board from `src/data/inspiration.ts` — third-party Awwwards nominees, always with studio credit + live + Awwwards links (`npm run shots -- --inspiration`). **Never move third-party sites into `projects.ts` or present them as Sdiek work.**
 
@@ -121,7 +131,7 @@ Testimonials: `src/data/testimonials.ts`. Only entries with `approved: true` ren
 | Motion | `src/scripts/motion.ts`: custom cursor + magnetic buttons, hero node-network canvas (mouse-reactive), letter-split reveals, 3D tilt, cursor-follow preview images, scroll reveals, marquee, scroll progress. **All motion off under `prefers-reduced-motion`** and the cursor is disabled on touch |
 | Forms | `PUBLIC_FORM_ENDPOINT` (n8n webhook) → JSON POST; fallback `mailto:` |
 | Booking | `PUBLIC_BOOKING_URL` (Cal.com / Calendly) embedded on `/book`; fallback = request form + WhatsApp |
-| Deploy | GitHub repo; GitHub Pages workflow in `.github/workflows/deploy.yml`. Set `PUBLIC_SITE_URL` (+ base path) per host |
+| Deploy | **Vercel** (primary): static Astro, `vercel.json`, `PUBLIC_SITE_URL` set as a Vercel env var (no sub-path). GitHub Pages workflow in `.github/workflows/deploy.yml` still runs on push to `main` with its own `PUBLIC_SITE_URL` (with `/sdiek-marketing` base) |
 
 ### Rules
 - All internal links go through `u()` in `src/lib/url.ts` (handles base path).
@@ -135,4 +145,5 @@ npm install
 npm run dev        # http://localhost:4321
 npm run build      # -> dist/
 npm run shots      # refresh live-site screenshots
+npx vercel --prod  # deploy to Vercel
 ```
